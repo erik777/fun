@@ -2,7 +2,9 @@
 hooks/
 node_modules/
 platforms/
-App_Resources/
+
+# Not sure if this belongs in SC
+#App_Resources/
 
 #Node
 package-lock.json
