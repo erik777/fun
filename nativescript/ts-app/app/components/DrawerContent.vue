@@ -56,7 +56,7 @@
   import Featured from "./Featured";
   import Search from "./Search";
   import Settings from "./Settings";
-//  import * as utils from "~/shared/utils";
+  import * as utils from "~/shared/utils";
   import { SelectedPageService } from "~/shared/selected-page-service";
 
   export default {
@@ -90,8 +90,8 @@
         this.$navigateTo(component, {
           clearHistory: true
         });
-        this.$refs.drawer.closeDrawer();
-//        utils.closeDrawer();
+//        this.$refs.drawer.closeDrawer();
+        utils.closeDrawer();
       }
     }
   };
