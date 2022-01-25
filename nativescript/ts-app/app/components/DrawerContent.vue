@@ -1,10 +1,8 @@
 <template lang="html">
-    <Page class="page">
-        <GridLayout class="page__content">
-            <Label class="page__content-icon far" text.decode="&#xf1ea;"/>
-            <Label class="page__content-placeholder" :text="message"/>
-        </GridLayout>
-    </Page>
+<Page>
+          <Label text="Close Drawer" color="lightgray" padding="10" style="horizontal-align: center" 
+            @tap="onCloseDrawerTap"></Label>
+</Page>
 </template>
 
 <script>
@@ -13,13 +11,13 @@
   import Featured from "./Featured";
   import Search from "./Search";
   import Settings from "./Settings";
-  import * as utils from "~/shared/utils";
+//  import * as utils from "~/shared/utils";
   import { SelectedPageService } from "~/shared/selected-page-service";
 
   export default {
     mounted() {
-//      SelectedPageService.getInstance().selectedPage$
-//        .subscribe((selectedPage) => this.selectedPage = selectedPage);
+      SelectedPageService.getInstance().selectedPage$
+        .subscribe((selectedPage) => this.selectedPage = selectedPage);
     },
     data() {
       return {
@@ -39,6 +37,10 @@
       Settings
     },
     methods: {
+      onCloseDrawerTap() {
+        if (this.$refs.drawer)
+          this.$refs.drawer.closeDrawer();
+      },
       onNavigationItemTap(component) {
         this.$navigateTo(component, {
           clearHistory: true

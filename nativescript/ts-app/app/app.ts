@@ -3,6 +3,7 @@ import RadSideDrawer from 'nativescript-ui-sidedrawer/vue'
 
 Vue.use(RadSideDrawer)
 
+import Home from './components/Home.vue'
 import HomeFlix from './components/HomeFlix.vue'
 import App from './components/App.vue'
 import GettingStarted from './components/GettingStarted.vue'
