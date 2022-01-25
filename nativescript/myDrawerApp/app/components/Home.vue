@@ -17,7 +17,7 @@
 </template>
 
 <script>
-//  import * as utils from "~/shared/utils";
+  import * as utils from "~/shared/utils";
   import { SelectedPageService } from "../shared/selected-page-service";
 
   export default {
@@ -31,8 +31,7 @@
     },
     methods: {
       onDrawerButtonTap() {
-        this.$refs.drawer.showDrawer();
-//        utils.showDrawer();
+        utils.showDrawer();
       }
     }
   };

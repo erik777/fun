@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "noImplicitAny": false,
+  
+  
     "strict": true,
     "target": "es2017",
     "module": "esnext",
