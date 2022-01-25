@@ -2,8 +2,8 @@
     <GridLayout rows="auto, *" class="nt-drawer__content">
         <StackLayout row="0" class="nt-drawer__header">
             <Image class="nt-drawer__header-image fas t-36" src.decode="font://&#xf2bd;"/>
-            <Label class="nt-drawer__header-brand" text="User Name"/>
-            <Label class="nt-drawer__header-footnote" text="username@mail.com"/>
+            <Label class="nt-drawer__header-brand" text="Joe B"/>
+            <Label class="nt-drawer__header-footnote" text="joe.b@mail.com"/>
         </StackLayout>
 
         <ScrollView row="1" class="nt-drawer__body">
