@@ -36,6 +36,13 @@
                     <Label col="1" text="Featured" class="p-r-10"/>
                 </GridLayout>
 
+                <GridLayout columns="auto, *"
+                            :class="'nt-drawer__list-item' + (selectedPage === 'HomeFlix' ? ' -selected': '')"
+                            @tap="onNavigationItemTap(HomeFlix)">
+                    <Label col="0" text.decode="&#xf26c;" class="nt-icon fas"/>
+                    <Label col="1" text="Flix" class="p-r-10"/>
+                </GridLayout>
+
                 <StackLayout class="hr"/>
 
                 <GridLayout columns="auto, *"
@@ -58,6 +65,9 @@
   import * as utils from "~/shared/utils";
   import { SelectedPageService } from "~/shared/selected-page-service";
 
+  // https://fontawesome.com/v4.7/cheatsheet/
+  import HomeFlix from "./HomeFlix";
+  
   export default {
     mounted() {
       SelectedPageService.getInstance().selectedPage$
@@ -69,6 +79,7 @@
         Browse: Browse,
         Featured: Featured,
         Search: Search,
+        HomeFlix: HomeFlix,
         Settings: Settings,
         selectedPage: ""
       };
@@ -77,6 +88,7 @@
       Home,
       Browse,
       Featured,
+      HomeFlix,
       Search,
       Settings
     },
@@ -89,7 +101,6 @@
         this.$navigateTo(component, {
           clearHistory: true
         });
-//        this.$refs.drawer.closeDrawer();
         utils.closeDrawer();
       }
     }

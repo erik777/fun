@@ -31,8 +31,6 @@
     },
     methods: {
       onDrawerButtonTap() {
-//        if (this.$refs.drawer)
-//          this.$refs.drawer.showDrawer();
         utils.showDrawer();
       }
     }

@@ -52,6 +52,9 @@ import Vue from 'nativescript-vue'
 import FlickService from '../services/FlickService'
 import Details from './Details.vue';
 
+import * as utils from "~/shared/utils";
+import { SelectedPageService } from "../shared/selected-page-service";
+
 const flickService = new FlickService()
 
 export default Vue.extend({
@@ -60,7 +63,13 @@ export default Vue.extend({
       flicks: flickService.getFlicks()
     }
   },
+  mounted() {
+      SelectedPageService.getInstance().updateSelectedPage("Flix");
+    },
   methods: {
+	   onDrawerButtonTap() {
+	       utils.showDrawer();
+	     },
     onFlickTap(args) {
       const id = args.item.id
       this.$navigateTo(Details, {
