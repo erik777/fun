@@ -70,7 +70,7 @@
         Featured: Featured,
         Search: Search,
         Settings: Settings,
-        selectedPage: "Home"
+        selectedPage: ""
       };
     },
     components: {
