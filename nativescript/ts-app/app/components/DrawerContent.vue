@@ -47,7 +47,6 @@
             </StackLayout>
         </ScrollView>
     </GridLayout>
-
 </template>
 
 <script>

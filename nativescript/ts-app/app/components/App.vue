@@ -9,7 +9,7 @@
     </RadSideDrawer>
 </template>
 
-<script>
+<script lang="ts">
   import DrawerContent from './DrawerContent.vue'
   import Home from './Home.vue'
   import { SlideInOnTopTransition } from 'nativescript-ui-sidedrawer';
@@ -26,21 +26,21 @@
       Home
     },
   methods: {
-    onNavigationButtonTap() {
-      Frame.topmost().goBack();
-    },
-    onOpenDrawerTap() {
-      if (this.$refs.drawer)
-        this.$refs.drawer.showDrawer();
-    },
-    onCloseDrawerTap() {
-      if (this.$refs.drawer)
-        this.$refs.drawer.closeDrawer();
-    },
-    onToggleDrawerTap() {
-      if (this.$refs.drawer)
-        this.$refs.drawer.toggleDrawerState();
-    },
+//     onNavigationButtonTap() {
+//       Frame.topmost().goBack();
+//     },
+//     onOpenDrawerTap() {
+//       if (this.$refs.drawer)
+//         this.$refs.drawer.showDrawer();
+//     },
+//     onCloseDrawerTap() {
+//       if (this.$refs.drawer)
+//         this.$refs.drawer.closeDrawer();
+//     },
+//     onToggleDrawerTap() {
+//       if (this.$refs.drawer)
+//         this.$refs.drawer.toggleDrawerState();
+//     },
   },
 };
 </script>
