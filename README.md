@@ -3,6 +3,10 @@ mobile and other projects to learn and have fun
 
 ## Nativescript notes
 
+### New project
+
+ns create <project-name> --vue
+
 ### To clean a project
 
 rm -rf platforms
@@ -15,5 +19,5 @@ rm -rf platforms
 
 [nativescript-vue.org](https://nativescript-vue.org/en/docs/introduction/)
 
-[NativeScript Bluetooth Plugin - git](https://github.com/facetious/nativescript-bluetooth)
+[NativeScript Bluetooth Plugin - git](https://github.com/nativescript-community/ble)
 
