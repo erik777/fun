@@ -47,7 +47,7 @@
   </Page>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'nativescript-vue'
 import FlickService from '../services/FlickService'
 import Details from './Details.vue';
