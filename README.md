@@ -15,9 +15,17 @@ rm -rf platforms
 
 `ns` or `tns` - NativeScript CLI
 
+test with --bundle
+
+tns run android --bundle
+
+tns install typescript
+
 ## Resources
 
 [nativescript-vue.org](https://nativescript-vue.org/en/docs/introduction/)
 
 [NativeScript Bluetooth Plugin - git](https://github.com/nativescript-community/ble)
+
+https://nativescripting.com/posts/typescript-class-components-in-nativescript-vue
 

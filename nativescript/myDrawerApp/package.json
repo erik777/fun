@@ -13,6 +13,7 @@
   "devDependencies": {
     "@nativescript/android": "~8.3.0",
     "@nativescript/webpack": "~5.0.0",
+    "nativescript-dev-typescript": "^0.10.0",
     "nativescript-vue-template-compiler": "~2.9.0"
   }
 }
