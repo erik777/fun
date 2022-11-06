@@ -16,11 +16,11 @@
   </Page>
 </template>
 
-<script lang="ts">
+<script>
   import Vue from "nativescript-vue";
   import RoboSmart from "./RoboSmart";
   
-  export default Vue.extend({
+  export default {
 	  components: {
 		  RoboSmart 
 	  },
@@ -29,7 +29,7 @@
         return "OpenStandards.net {N}-Vue fun";
       }
     }
-  });
+  };
 </script>
 
 <style scoped lang="scss">

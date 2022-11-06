@@ -5,20 +5,27 @@
           <Span text.decode="&#xf135; "/>
           <Span class="bt-brand" :text="message"/>
         </FormattedString>
-      </Label>
-      <Button text="Refresh" @tap="onRefresh" />
+      </Label> 
+      <ListView for="item in deviceList" @itemTap="onItemTap">
+	      <v-template>
+	        <Label :text="item.name" />
+	      </v-template>
+	    </ListView>
+
+	<Button text="Refresh" @tap="onRefresh" />
     </GridLayout>
 </template>
 
-<script lang="ts">
+<script>
   import Vue from "nativescript-vue";
-
+  import { BtDevice } from "../shared/BtDevice";
+  
   const deviceList = [];
   
-  export default Vue.extend({
+  export default {
 	  data() {
 		  return {
-			  deviceList: []
+			  deviceList: deviceList
 		  }
 	  },
     computed: {
@@ -28,14 +35,15 @@
     },
     methods: {
       onRefresh() {
-        console.log("onRefresh");
+    	  this.deviceList.push( new BtDevice( {name: "blah"} ) );
+        console.log("onRefresh " + this.deviceList.length);
       },
       onItemTap(event) {
     	  console.log(event.index)
     	  console.log(event.item)
     	}
     }
-  });
+  };
 </script>
 
 <style scoped lang="scss">
