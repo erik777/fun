@@ -11,17 +11,22 @@
           <Span :text="message"/>
         </FormattedString>
       </Label>
+      <RoboSmart/>
     </GridLayout>
   </Page>
 </template>
 
 <script lang="ts">
   import Vue from "nativescript-vue";
-
+  import RoboSmart from "./RoboSmart";
+  
   export default Vue.extend({
+	  components: {
+		  RoboSmart 
+	  },
     computed: {
       message() {
-        return "Blank {N}-Vue app";
+        return "OpenStandards.net {N}-Vue fun";
       }
     }
   });
@@ -38,6 +43,6 @@
   .info {
     font-size: 20;
     horizontal-align: center;
-    vertical-align: center;
+    vertical-align: bottom;
   }
 </style>
