@@ -1,3 +1,5 @@
+export type CurrentDevice = BtDevice | null;
+
 export class BtDevice {
   name = "unknown";
   

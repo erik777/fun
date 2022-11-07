@@ -1,31 +1,35 @@
 <template>
-    <GridLayout>
+    <StackLayout class="deviceList">
       <Label class="bt-brand">
         <FormattedString>
           <Span text.decode="&#xf135; "/>
           <Span class="bt-brand" :text="message"/>
         </FormattedString>
       </Label> 
+
+      <Button class="button" text="Refresh" @tap="onRefresh" />
+
       <ListView for="item in deviceList" @itemTap="onItemTap">
 	      <v-template>
 	        <Label :text="item.name" />
 	      </v-template>
 	    </ListView>
 
-	<Button text="Refresh" @tap="onRefresh" />
-    </GridLayout>
+    </StackLayout>
 </template>
 
-<script>
+<script lang="ts">
   import Vue from "nativescript-vue";
-  import { BtDevice } from "../shared/BtDevice";
+  import { BtDevice, CurrentDevice } from "../shared/BtDevice";
   
   const deviceList = [];
+  let currentDevice: CurrentDevice = null;
   
   export default {
 	  data() {
 		  return {
-			  deviceList: deviceList
+			  deviceList: deviceList,
+			  currentDevice: currentDevice
 		  }
 	  },
     computed: {
@@ -35,12 +39,13 @@
     },
     methods: {
       onRefresh() {
-    	  this.deviceList.push( new BtDevice( {name: "blah"} ) );
+    	  this.deviceList.push( new BtDevice( {name: "blah "  + this.deviceList.length} ) );
         console.log("onRefresh " + this.deviceList.length);
       },
-      onItemTap(event) {
+      onItemTap(event: any) {
     	  console.log(event.index)
     	  console.log(event.item)
+    	  this.currentDevice = event.item;
     	}
     }
   };
@@ -55,9 +60,16 @@
     font-size: 40;
     horizontal-align: center;
   }
-
-  .info {
+  
+  .deviceList {
+    margin-bottom: 100px
+  }
+  
+  .button {
     font-size: 20;
-    horizontal-align: center;
+    font-weight: bold;
+    color: white;
+    background-color: navy;
+    width: 200em;
   }
 </style>
