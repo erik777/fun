@@ -41,6 +41,7 @@
     		this.currentDevice = event
     	},
     	clearItem() {
+    		console.log("clearItem");
     		this.currentDevice = null;
     	}
     }
@@ -55,5 +56,15 @@
     @include colorize($color: accent);
     font-size: 40;
     horizontal-align: center;
+  }
+</style>
+
+<style lang="scss">
+  .button {
+    font-size: 20;
+    font-weight: bold;
+    color: white;
+    background-color: navy;
+    width: 200em;
   }
 </style>

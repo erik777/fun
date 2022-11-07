@@ -1,15 +1,14 @@
 <template>
-
-<!-- 
-	<Label v-if="currentDevice">
-	  <FormattedString>
-	    <Span text="Device "/>
-	    <Span :text="currentDevice.name"/>
-	  </FormattedString>
-	</Label>
- -->
-	
-  <Button class="button" text="Return" @tap="onReturn" />
+  <StackLayout>
+		<Label v-if="currentDevice" class="theDevice">
+		  <FormattedString>
+		    <Span text="Device "/>
+	      <Span :text="currentDevice.name"/>
+		  </FormattedString>
+		</Label>
+		
+	  <Button class="button" text="Return" @tap="onReturn" />
+  </StackLayout>
 </template>
 
 <script lang="ts">
@@ -28,3 +27,9 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="scss">
+  .theDevice {
+    font-size: 20;
+  }
+</style>

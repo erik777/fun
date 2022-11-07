@@ -51,12 +51,4 @@
   .deviceList {
     margin-bottom: 100px
   }
-  
-  .button {
-    font-size: 20;
-    font-weight: bold;
-    color: white;
-    background-color: navy;
-    width: 200em;
-  }
 </style>
