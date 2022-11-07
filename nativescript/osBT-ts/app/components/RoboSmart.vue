@@ -7,30 +7,28 @@
         </FormattedString>
       </Label> 
 
-      <Button class="button" text="Refresh" @tap="onRefresh" />
-
-      <ListView for="item in deviceList" @itemTap="onItemTap">
-	      <v-template>
-	        <Label :text="item.name" />
-	      </v-template>
-	    </ListView>
-
+      <BtDeviceList @currentDevice="onCurrentDevice($event)" v-if="!currentDevice" />
+      <BtDeviceView @close="clearItem" :currentDevice="currentDevice" v-if="currentDevice"/>
     </StackLayout>
 </template>
 
 <script lang="ts">
   import Vue from "nativescript-vue";
+  import BtDeviceList from "./BtDeviceList";
+  import BtDeviceView from "./BtDeviceView";
   import { BtDevice, CurrentDevice } from "../shared/BtDevice";
   
-  const deviceList = [];
-  let currentDevice: CurrentDevice = null;
+//  let currentDevice: CurrentDevice = null;
   
   export default {
 	  data() {
 		  return {
-			  deviceList: deviceList,
-			  currentDevice: currentDevice
+			  currentDevice: null
 		  }
+	  },
+	  components: {
+		  BtDeviceList,
+		  BtDeviceView,
 	  },
     computed: {
       message() {
@@ -38,14 +36,12 @@
       }
     },
     methods: {
-      onRefresh() {
-    	  this.deviceList.push( new BtDevice( {name: "blah "  + this.deviceList.length} ) );
-        console.log("onRefresh " + this.deviceList.length);
-      },
-      onItemTap(event: any) {
-    	  console.log(event.index)
-    	  console.log(event.item)
-    	  this.currentDevice = event.item;
+    	onCurrentDevice(event: any) {
+    		console.log("onCurrentDevice event: " + JSON.stringify(event));
+    		this.currentDevice = event
+    	},
+    	clearItem() {
+    		this.currentDevice = null;
     	}
     }
   };
@@ -59,17 +55,5 @@
     @include colorize($color: accent);
     font-size: 40;
     horizontal-align: center;
-  }
-  
-  .deviceList {
-    margin-bottom: 100px
-  }
-  
-  .button {
-    font-size: 20;
-    font-weight: bold;
-    color: white;
-    background-color: navy;
-    width: 200em;
   }
 </style>
