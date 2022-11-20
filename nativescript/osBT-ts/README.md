@@ -21,6 +21,14 @@ Debug the project with Chrome DevTools:
   $ ns debug android
 ```
 
+Build the debug APK:
+
+```
+  $ ns build android
+```
+
+Output to platforms/android/app/build/outputs/apk/debug/app-debug.apk
+
 ## References
 
 [NativeScript Bluetooth](https://github.com/nativescript-community/ble)

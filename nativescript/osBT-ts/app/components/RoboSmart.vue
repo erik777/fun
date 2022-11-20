@@ -17,13 +17,15 @@
   import BtDeviceList from "./BtDeviceList";
   import BtDeviceView from "./BtDeviceView";
   import { BtDevice, CurrentDevice } from "../shared/BtDevice";
+  import { Bluetooth, Peripheral, getBluetoothInstance } from '@nativescript-community/ble';
   
 //  let currentDevice: CurrentDevice = null;
   
   export default {
 	  data() {
 		  return {
-			  currentDevice: null
+			  currentDevice: null,
+			  bluetooth: getBluetoothInstance()
 		  }
 	  },
 	  components: {
