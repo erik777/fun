@@ -34,3 +34,6 @@ Output to platforms/android/app/build/outputs/apk/debug/app-debug.apk
 [NativeScript Bluetooth](https://github.com/nativescript-community/ble)
 
 [cordova-plugin-ble-central github](https://github.com/don/cordova-plugin-ble-central)
+
+[nativescript-community/perms](https://github.com/nativescript-community/perms)
+

@@ -25,7 +25,7 @@
 	  data() {
 		  return {
 			  currentDevice: null,
-			  bluetooth: getBluetoothInstance(),
+//			  btInstance: getBluetoothInstance(),
 		    btEnabled: false
 		  }
 	  },
@@ -34,17 +34,17 @@
 		  BtDeviceView,
 	  },
 	  mounted() {
-		  console.log(`mounted() called.`);
-      this.bluetooth.enable().then(enabled => {
-        setTimeout(() => {
-        	this.btEnabled = enabled;
-          dialogs.alert({
-              title: 'Did the user allow enabling Bluetooth by our app?',
-              message: enabled ? 'Yes' : 'No',
-              okButtonText: 'OK, nice!'
-          });
-        }, 500);
-      });		  
+//		  console.log(`mounted() called.`);
+//      this.btInstance.enable().then(enabled => {
+//        setTimeout(() => {
+//        	this.btEnabled = enabled;
+//          dialogs.alert({
+//              title: 'Did the user allow enabling Bluetooth by our app?',
+//              message: enabled ? 'Yes' : 'No',
+//              okButtonText: 'OK, nice!'
+//          });
+//        }, 500);
+//      });		  
 	  },
     computed: {
       message() {
