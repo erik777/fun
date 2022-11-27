@@ -9,7 +9,7 @@
 
       <ListView for="item in deviceList" @itemTap="onItemTap">
         <v-template>
-          <Label :text="item.name" />
+          <Label :text="item.description" />
         </v-template>
       </ListView>
     </StackLayout>
@@ -90,9 +90,15 @@
       onRefresh() {
     	  if (this.btEnabled) {
           this.doStartScanning();
-          this.deviceList.push( new BtDevice( {name: "scanning "  + this.deviceList.length} ) );
+          this.deviceList.push( new BtDevice( {
+        	  description: "scanning "  + this.deviceList.length, 
+            name: "scanning "  + this.deviceList.length, 
+        	  index: this.deviceList.length} ) );
     	  } else {
-    	    this.deviceList.push( new BtDevice( {name: "blah "  + this.deviceList.length} ) );
+    	    this.deviceList.push( new BtDevice( {
+            description: "blah "  + this.deviceList.length, 
+            name: "blah "  + this.deviceList.length, 
+    	    	index: this.deviceList.length} ) );
     	  }
         console.log("onRefresh " + this.deviceList.length);
       },
@@ -152,7 +158,12 @@
                   onDiscovered: (perip: Peripheral) => {
                 	  this.status += " onDiscovered()";
                     console.log(`onDiscovered()`);
-                    this.deviceList.push( new BtDevice( {name: "onDisc "  + this.deviceList.length + " UUID: " + perip.UUID, UUID: perip.UUID} ) );
+                    this.deviceList.push( new BtDevice( {
+                        index: this.deviceList.length,
+                        description: "onDisc "  + this.deviceList.length + " " + (perip.name ? perip.name : perip.UUID), 
+                        name: perip.name, 
+                      	UUID: perip.UUID, 
+                    	} ) );
 //                    const perip = eventData as Peripheral;
 //                    console.log("Periperhal found with UUID: " + perip.UUID);
 //                	  this.onDiscoveredEvent(perip);
@@ -198,7 +209,11 @@
       onDiscoveredEvent(perip: Peripheral) {
           console.log(`onDiscoveredEvent()`);
 //          const perip = eventData.data as Peripheral;
-          this.deviceList.push( new BtDevice( {name: "onDiscEvent "  + this.deviceList.length} ) );
+          this.deviceList.push( new BtDevice( {
+            index: this.deviceList.length,
+        	  name: "onDiscEvent "  + this.deviceList.length,
+        	  description: "onDiscEvent "  + this.deviceList.length,
+        	  } ) );
           let index = -1;
           this.peripherals.some((p, i) => {
               if (p.UUID === perip.UUID) {
@@ -209,10 +224,16 @@
           });
           console.log('Peripheral found:', JSON.stringify(perip), index);
           if (index === -1) {
-              this.deviceList.push( new BtDevice( {name: "push "  + this.deviceList.length, UUID: perip.UUID} ) );
+              this.deviceList.push( new BtDevice( {
+            	  index: this.deviceList.length,
+            	  name: "push "  + this.deviceList.length, 
+            	  UUID: perip.UUID} ) );
               this.peripherals.push(perip);
           } else {
-              this.deviceList.push( new BtDevice( {name: "setItem "  + index, UUID: perip.UUID} ) );
+              this.deviceList.push( new BtDevice( {
+                index: index,
+            	  name: "setItem "  + index, 
+            	  UUID: perip.UUID} ) );
               this.peripherals.setItem(index, perip);
           }
       }

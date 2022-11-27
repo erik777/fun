@@ -2,7 +2,19 @@
   <StackLayout>
     <Label v-if="currentDevice" class="theDevice">
       <FormattedString>
-        <Span text="Device "/>
+        <Span text="Index "/>
+        <Span :text="currentDevice.index"/>
+      </FormattedString>
+    </Label>
+    <Label v-if="currentDevice" class="theDevice">
+      <FormattedString>
+        <Span text="Desc "/>
+        <Span :text="currentDevice.description"/>
+      </FormattedString>
+    </Label>
+    <Label v-if="currentDevice" class="theDevice">
+      <FormattedString>
+        <Span text="Name "/>
         <Span :text="currentDevice.name"/>
       </FormattedString>
     </Label>
