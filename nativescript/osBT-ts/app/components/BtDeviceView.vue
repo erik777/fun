@@ -24,6 +24,33 @@
         <Span :text="currentDevice.UUID"/>
       </FormattedString>
     </Label>
+    <Label v-if="currentDevice" class="theDevice">
+      <FormattedString>
+        <Span text="localName "/>
+        <Span :text="currentDevice.localName"/>
+      </FormattedString>
+    </Label>
+    <Label v-if="currentDevice" class="theDevice">
+      <FormattedString>
+        <Span text="RSSI "/>
+        <Span :text="currentDevice.RSSI"/>
+      </FormattedString>
+    </Label>
+    <Label v-if="currentDevice" class="theDevice">
+      <FormattedString>
+        <Span text="Manufacturer "/>
+        <Span :text="currentDevice.manufacturerId"/>
+      </FormattedString>
+    </Label>
+    <Label v-if="currentDevice" class="theDevice">
+      <FormattedString>
+        <Span text="Services "/>
+        <Span :text="jsonServices"/>
+      </FormattedString>
+    </Label>
+    <TextView v-if="currentDevice" class="theDevice" editable="false" maxLines="3">
+      JSON {{ currentDevice.json }}
+    </TextView>
 		
 	  <Button class="button" text="Return" @tap="onReturn" />
   </StackLayout>
@@ -31,7 +58,7 @@
 
 <script lang="ts">
 import Vue from "nativescript-vue";
-import { BtDevice } from "../shared/BtDevice";
+import { BtDevice, Service } from "../shared/BtDevice";
 
 export default {
   props: {
@@ -41,6 +68,18 @@ export default {
 	  onReturn() {
 		  console.log("emitting close");
 		  this.$emit("close", true);
+	  }
+  },
+  computed: {
+	  jsonServices() {
+		  if (this.currentDevice) {
+        if (this.currentDevice.services)
+            return this.currentDevice.services.length + " " + JSON.stringify(this.currentDevice.services);
+        else
+            return "none";
+		  }
+		  else 
+			  return "";
 	  }
   }
 }

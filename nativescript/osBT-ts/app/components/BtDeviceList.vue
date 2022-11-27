@@ -163,6 +163,11 @@
                         description: "onDisc "  + this.deviceList.length + " " + (perip.name ? perip.name : perip.UUID), 
                         name: perip.name, 
                       	UUID: perip.UUID, 
+                      	localName: perip.localName,
+                      	RSSI: perip.RSSI,
+                      	manufacturerId: perip.manufacturerId,
+                      	services: perip.services,
+                      	json: JSON.stringify(perip),
                     	} ) );
 //                    const perip = eventData as Peripheral;
 //                    console.log("Periperhal found with UUID: " + perip.UUID);
