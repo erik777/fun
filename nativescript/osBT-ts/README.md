@@ -37,3 +37,5 @@ Output to platforms/android/app/build/outputs/apk/debug/app-debug.apk
 
 [nativescript-community/perms](https://github.com/nativescript-community/perms)
 
+[bluetooth advertising - by moko blue](https://www.mokoblue.com/about-bluetooth-advertising/)
+

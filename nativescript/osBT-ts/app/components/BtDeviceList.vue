@@ -64,10 +64,10 @@
         this.checkPermissions();
         this.requestPermissions();
         // using an event listener instead of the 'onDiscovered' callback of 'startScanning'
-      //  this.btInstance.on(Bluetooth.device_discovered_event, (eventData: any) => {
+        this.btInstance.on(Bluetooth.device_discovered_event, (eventData: any) => {
       //      const perip = eventData.data as Peripheral;
-      //      this.onDiscoveredEvent(perip);
-      //  });
+//          this.onDiscoveredEvent(perip);
+        });
       },
     computed: {
       refreshBtnText() {
@@ -127,7 +127,7 @@
           });
       },
       requestPermissions() {
-        requestPermission(['location', 'bluetooth', 'bluetoothScan'], { type: 'always' }).then(response => {
+        requestPermission(['location', 'bluetooth', 'bluetoothScan', 'bluetoothConnect'], { type: 'always' }).then(response => {
           console.log("requestPermissions, response: " + JSON.stringify(response));
           this.status += " lr:" + JSON.stringify(response);
           this.btInstance = getBluetoothInstance();
@@ -149,10 +149,10 @@
                   // we can't skip permissions and we need enabled location as we dont use filters:
                 	// https://developer.android.com/guide/topics/connectivity/bluetooth-le
 //                  skipPermissionCheck: false,
-                  onDiscovered: (perip: any) => {
+                  onDiscovered: (perip: Peripheral) => {
                 	  this.status += " onDiscovered()";
                     console.log(`onDiscovered()`);
-//                    this.deviceList.push( new BtDevice( {name: "onDiscovered "  + this.deviceList.length} ) );
+                    this.deviceList.push( new BtDevice( {name: "onDisc "  + this.deviceList.length + " UUID: " + perip.UUID, UUID: perip.UUID} ) );
 //                    const perip = eventData as Peripheral;
 //                    console.log("Periperhal found with UUID: " + perip.UUID);
 //                	  this.onDiscoveredEvent(perip);
@@ -198,7 +198,7 @@
       onDiscoveredEvent(perip: Peripheral) {
           console.log(`onDiscoveredEvent()`);
 //          const perip = eventData.data as Peripheral;
-          this.deviceList.push( new BtDevice( {name: "onDiscoveredEvent "  + this.deviceList.length} ) );
+          this.deviceList.push( new BtDevice( {name: "onDiscEvent "  + this.deviceList.length} ) );
           let index = -1;
           this.peripherals.some((p, i) => {
               if (p.UUID === perip.UUID) {
@@ -209,10 +209,10 @@
           });
           console.log('Peripheral found:', JSON.stringify(perip), index);
           if (index === -1) {
-              this.deviceList.push( new BtDevice( {name: "push "  + this.deviceList.length} ) );
+              this.deviceList.push( new BtDevice( {name: "push "  + this.deviceList.length, UUID: perip.UUID} ) );
               this.peripherals.push(perip);
           } else {
-              this.deviceList.push( new BtDevice( {name: "setItem "  + index} ) );
+              this.deviceList.push( new BtDevice( {name: "setItem "  + index, UUID: perip.UUID} ) );
               this.peripherals.setItem(index, perip);
           }
       }

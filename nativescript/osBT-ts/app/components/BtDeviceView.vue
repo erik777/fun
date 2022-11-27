@@ -1,11 +1,17 @@
 <template>
   <StackLayout>
-		<Label v-if="currentDevice" class="theDevice">
-		  <FormattedString>
-		    <Span text="Device "/>
-	      <Span :text="currentDevice.name"/>
-		  </FormattedString>
-		</Label>
+    <Label v-if="currentDevice" class="theDevice">
+      <FormattedString>
+        <Span text="Device "/>
+        <Span :text="currentDevice.name"/>
+      </FormattedString>
+    </Label>
+    <Label v-if="currentDevice" class="theDevice">
+      <FormattedString>
+        <Span text="UUID "/>
+        <Span :text="currentDevice.UUID"/>
+      </FormattedString>
+    </Label>
 		
 	  <Button class="button" text="Return" @tap="onReturn" />
   </StackLayout>

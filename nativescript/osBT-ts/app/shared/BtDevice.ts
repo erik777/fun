@@ -2,6 +2,7 @@ export type CurrentDevice = BtDevice | null;
 
 export class BtDevice {
   name = "unknown";
+  UUID = "unknown";
   
   constructor (
     private other?: any
@@ -9,6 +10,7 @@ export class BtDevice {
   {
     if (this.other) {
       this.name = this.other.name;
+      this.UUID = this.other.UUID;
     } 
   }
 }
