@@ -116,13 +116,6 @@
         this.permissionToStatus('location');
         this.permissionToStatus('bluetooth');
         this.permissionToStatus('bluetoothScan');
-//    	  checkPermission('bluetoothScan', { type: 'always' }).then(response => {
-//    	    console.log("checkPermissions, response: " + JSON.stringify(response));
-//          this.status += " c:" + JSON.stringify(response);
-//    		  this.requestPermissions();
-//    		}, err => {
-//    			this.status += " c-error: " + JSON.stringify(err);
-//    		});
       },
       permissionToStatus(permission: string) {
           checkPermission(permission, { type: 'always' }).then(response => {
@@ -148,27 +141,16 @@
           this.btInstance
               .startScanning({
                   seconds: 4, // passing in seconds makes the plugin stop scanning after <seconds> seconds
-                  // onDiscovered: peripheral => {
-                  //     console.log("peripheral discovered. Not adding it here because we're using a listener.");
-                  //     // this.peripherals.push(peripheral);
-                  // },
                   // we can't skip permissions and we need enabled location as we dont use filters:
                 	// https://developer.android.com/guide/topics/connectivity/bluetooth-le
 //                  skipPermissionCheck: false,
                   onDiscovered: (perip: Peripheral) => {
                 	  this.status += " onDiscovered()";
                     console.log(`onDiscovered()`);
-                    this.deviceList.push( new BtDevice( {
-                        index: this.deviceList.length,
-                        description: "onDisc "  + this.deviceList.length + " " + (perip.name ? perip.name : perip.UUID), 
-                        name: perip.name, 
-                      	UUID: perip.UUID, 
-                      	localName: perip.localName,
-                      	RSSI: perip.RSSI,
-                      	manufacturerId: perip.manufacturerId,
-                      	services: perip.services,
-                      	json: JSON.stringify(perip),
-                    	} ) );
+                    const btDevice = BtNativeScriptBle.toBtDevice(perip, this.deviceList.length);
+                    btDevice.description = "onDisc1 "  +  btDevice.description;
+
+                    this.deviceList.push( btDevice );
 //                    const perip = eventData as Peripheral;
 //                    console.log("Periperhal found with UUID: " + perip.UUID);
 //                	  this.onDiscoveredEvent(perip);

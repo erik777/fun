@@ -42,12 +42,14 @@
         <Span :text="currentDevice.manufacturerId"/>
       </FormattedString>
     </Label>
-    <Label v-if="currentDevice" class="theDevice">
-      <FormattedString>
-        <Span text="Services "/>
-        <Span :text="jsonServices"/>
-      </FormattedString>
-    </Label>
+    <template v-if="currentDevice">
+      <Label class="theDevice">
+        <FormattedString>
+          <Span text="Services "/>
+          <Span :text="jsonServices"/>
+        </FormattedString>
+      </Label>
+    </template>
     <TextView v-if="currentDevice" class="theDevice" editable="false" maxLines="3">
       JSON {{ currentDevice.json }}
     </TextView>
@@ -68,6 +70,12 @@ export default {
 	  onReturn() {
 		  console.log("emitting close");
 		  this.$emit("close", true);
+	  },
+	  connect() {
+		  
+	  },
+	  disconnect() {
+		  
 	  }
   },
   computed: {

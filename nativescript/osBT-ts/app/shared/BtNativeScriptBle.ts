@@ -1,6 +1,6 @@
 import { Bluetooth, Peripheral, getBluetoothInstance } from '@nativescript-community/ble';
 import { check as checkPermission, request as requestPermission } from '@nativescript-community/perms';
-
+import { BtDevice } from './BtDevice';
 
 export class BtNativeScriptBle {
   status = "";
@@ -19,5 +19,20 @@ export class BtNativeScriptBle {
          this.status += " lr:" + response[0];
       });
     });
+  }
+  
+  static toBtDevice(perip: Peripheral, index: number): BtDevice {
+    const btDevice = new BtDevice({
+          index: index,
+          description: index + " " + (perip.name ? perip.name : perip.UUID), 
+          name: perip.name, 
+          UUID: perip.UUID, 
+          localName: perip.localName,
+          RSSI: perip.RSSI,
+          manufacturerId: perip.manufacturerId,
+          services: perip.services,
+          json: JSON.stringify(perip),
+    });
+    return btDevice;
   }
 }
