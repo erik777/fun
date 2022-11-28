@@ -7,8 +7,14 @@
         </FormattedString>
       </Label> 
 
-      <BtDeviceList @currentDevice="onCurrentDevice($event)" v-if="!currentDevice" />
-      <BtDeviceView @close="clearItem" :currentDevice="currentDevice" v-if="currentDevice"/>
+      <BtDeviceList v-if="!currentDevice" 
+        @currentDevice="onCurrentDevice($event)" 
+        :bt="bt"
+        />
+      <BtDeviceView v-if="currentDevice" 
+        @close="clearItem" 
+        @connect="connect"
+        :currentDevice="currentDevice"/>
     </StackLayout>
 </template>
 
@@ -20,12 +26,16 @@
   import BtDeviceList from "./BtDeviceList";
   import BtDeviceView from "./BtDeviceView";
   import { BtDevice, CurrentDevice } from "../shared/BtDevice";
+  import { BtNativeScriptBle } from "../shared/BtNativeScriptBle";
+
+  const btInstance = getBluetoothInstance();
+  const bt = new BtNativeScriptBle(btInstance);
   
   export default {
 	  data() {
 		  return {
 			  currentDevice: null,
-//			  btInstance: getBluetoothInstance(),
+			  bt: bt,
 		    btEnabled: false
 		  }
 	  },
@@ -59,6 +69,9 @@
     	clearItem() {
     		console.log("clearItem");
     		this.currentDevice = null;
+    	},
+    	connect(uuid: string) {
+    		console.log("connect " + uuid);
     	}
     }
   };

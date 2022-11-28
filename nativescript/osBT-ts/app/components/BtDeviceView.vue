@@ -30,31 +30,32 @@
         <Span :text="currentDevice.localName"/>
       </FormattedString>
     </Label>
-    <Label v-if="currentDevice" class="theDevice">
-      <FormattedString>
-        <Span text="RSSI "/>
-        <Span :text="currentDevice.RSSI"/>
-      </FormattedString>
-    </Label>
-    <Label v-if="currentDevice" class="theDevice">
-      <FormattedString>
-        <Span text="Manufacturer "/>
-        <Span :text="currentDevice.manufacturerId"/>
-      </FormattedString>
-    </Label>
     <template v-if="currentDevice">
+      <Label class="theDevice">
+        <FormattedString>
+          <Span text="RSSI "/>
+          <Span :text="currentDevice.RSSI"/>
+        </FormattedString>
+      </Label>
+      <Label class="theDevice">
+        <FormattedString>
+          <Span text="Manufacturer "/>
+          <Span :text="currentDevice.manufacturerId"/>
+        </FormattedString>
+      </Label>
       <Label class="theDevice">
         <FormattedString>
           <Span text="Services "/>
           <Span :text="jsonServices"/>
         </FormattedString>
       </Label>
+      <TextView class="theDevice" editable="false" maxLines="3">
+        JSON {{ currentDevice.json }}
+      </TextView>
+      <Button class="button" text="Connect" @tap="connect" />
     </template>
-    <TextView v-if="currentDevice" class="theDevice" editable="false" maxLines="3">
-      JSON {{ currentDevice.json }}
-    </TextView>
 		
-	  <Button class="button" text="Return" @tap="onReturn" />
+    <Button class="button" text="Return" @tap="onReturn" />
   </StackLayout>
 </template>
 
@@ -72,7 +73,8 @@ export default {
 		  this.$emit("close", true);
 	  },
 	  connect() {
-		  
+	    console.log("emitting connect");
+		  this.$emit("connect", this.currentDevice.UUID)
 	  },
 	  disconnect() {
 		  

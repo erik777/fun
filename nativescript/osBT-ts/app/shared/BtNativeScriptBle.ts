@@ -5,7 +5,7 @@ import { BtDevice } from './BtDevice';
 export class BtNativeScriptBle {
   status = "";
   
-  constructor() {
+  constructor(public btInstance: Bluetooth) {
   }
   
   checkPermissions(): void {
