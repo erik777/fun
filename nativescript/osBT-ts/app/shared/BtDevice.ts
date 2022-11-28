@@ -40,6 +40,7 @@ export class BtDevice {
   index = -1;
   name = "unknown";
   UUID = "unknown";
+  state = "disconnected";
   localName?: string;
   RSSI?: number;
   manufacturerId?: number;
@@ -67,6 +68,8 @@ export class BtDevice {
         this.services = this.other.services;
       if (this.other.json)
         this.json = this.other.json;
+      if (this.other.state)
+        this.state = this.other.state;
     } 
   }
 }

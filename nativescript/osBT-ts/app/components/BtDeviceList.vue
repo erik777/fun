@@ -30,8 +30,6 @@
   const deviceList: BtDevice[] = [];
   let currentDevice: CurrentDevice = null;
   const peripherals = new ObservableArray<Peripheral>();
-  const btInstance = getBluetoothInstance();
-//  const bt = new BtNativeScriptBle(btInstance);
 
   export default {
 	  props: {
@@ -41,7 +39,7 @@
       return {
         deviceList: deviceList,
         currentDevice: currentDevice,
-        btInstance: btInstance,
+        btInstance: this.bt.btInstance,
         btEnabled: false,
         isLoading: false,
         peripherals: peripherals,

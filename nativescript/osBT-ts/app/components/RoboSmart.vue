@@ -72,6 +72,12 @@
     	},
     	connect(uuid: string) {
     		console.log("connect " + uuid);
+    		this.bt.connect(uuid).then( (perip: Peripheral) => {
+    	    console.log("Connected to " + perip.UUID);
+    			this.currentDevice = BtNativeScriptBle.toBtDevice(perip, this.currentDevice.index);
+    		}).catch( err => {
+    			console.log("Error connecting to " + uuid);
+    		});
     	}
     }
   };

@@ -21,6 +21,35 @@ export class BtNativeScriptBle {
     });
   }
   
+  connect(uuid: string): Promise<Peripheral> {
+    const promise = new Promise<Peripheral>( (resolve, reject) => {
+      console.log("connect(" + uuid + ") called");
+      this.btInstance.connect({
+        UUID: uuid,
+        onConnected: (perip: Peripheral) => {
+          console.log("connected to " + uuid);
+          this.disconnect(uuid);
+          resolve(perip);
+        },
+        onDisconnected: (perip: Peripheral) => {
+          console.log("disconnected from " + uuid);
+        },
+      });
+    });
+    return promise;
+  }
+  
+  disconnect(uuid: string) {
+    console.log("disconnect " + uuid);
+    this.btInstance.disconnect({UUID: uuid})
+      .then( () => {
+        console.log("disconnected " + uuid);
+      })
+      .catch( (err) => {
+        console.log("error disconnecting from " + uuid + ", err: " + JSON.stringify(err));
+      });
+  }
+  
   static toBtDevice(perip: Peripheral, index: number): BtDevice {
     const btDevice = new BtDevice({
           index: index,
