@@ -14,6 +14,7 @@
       <BtDeviceView v-if="currentDevice" 
         @close="clearItem" 
         @connect="connect"
+        @disconnect="disconnect"
         :currentDevice="currentDevice"/>
     </StackLayout>
 </template>
@@ -71,13 +72,28 @@
     		this.currentDevice = null;
     	},
     	connect(uuid: string) {
-    		console.log("connect " + uuid);
+    		console.log("connecting to " + uuid);
+        this.currentDevice.connecting();
     		this.bt.connect(uuid).then( (perip: Peripheral) => {
     	    console.log("Connected to " + perip.UUID);
-    			this.currentDevice = BtNativeScriptBle.toBtDevice(perip, this.currentDevice.index);
+    	    this.currentDevice.connected();
+    			const device = BtNativeScriptBle.toBtDevice(perip, this.currentDevice.index);
+    			this.currentDevice = device.connected();
     		}).catch( err => {
-    			console.log("Error connecting to " + uuid);
+    			console.log("Error connecting to " + uuid + ", err: " + JSON.stringify(err));
+    			 this.currentDevice.disconnected();
     		});
+    	},
+    	disconnect(uuid: string) {
+        console.log("disconnecting " + uuid);
+        this.currentDevice.disconnecting();
+        this.bt.disconnect(uuid).then( () => {
+        	console.log("Disconnected " + uuid);
+        	this.currentDevice.disconnected();
+        }).catch( err => {
+        	console.log("Disconnecting error for " + uuid + ", err: " + JSON.stringify(err));
+          this.currentDevice.disconnected();
+        })
     	}
     }
   };

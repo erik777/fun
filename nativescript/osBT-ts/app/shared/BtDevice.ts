@@ -35,12 +35,17 @@ export interface AdvertismentData {
     flags?: number;
 }
 
+export const DISCONNECTED = "disconnected";
+export const DISCONNECTING = "disconnecting";
+export const CONNECTED = "connected";
+export const CONNECTING = "connecting";
+
 export class BtDevice {
   description: string;
   index = -1;
   name = "unknown";
   UUID = "unknown";
-  state = "disconnected";
+  state = DISCONNECTED;
   localName?: string;
   RSSI?: number;
   manufacturerId?: number;
@@ -71,5 +76,33 @@ export class BtDevice {
       if (this.other.state)
         this.state = this.other.state;
     } 
+  }
+  
+  connected(): BtDevice {
+    this.state = CONNECTED;
+    return this;
+  }
+  
+  connecting(): BtDevice {
+    this.state = CONNECTING;
+    return this;
+  }
+  
+  disconnected(): BtDevice {
+    this.state = DISCONNECTED;
+    return this;
+  }
+  
+  disconnecting(): BtDevice {
+    this.state = DISCONNECTING;
+    return this;
+  }
+  
+  isConnected(): boolean {
+    return this.state === CONNECTED; 
+  }
+  
+  isConnecting(): boolean {
+    return this.state === CONNECTING; 
   }
 }

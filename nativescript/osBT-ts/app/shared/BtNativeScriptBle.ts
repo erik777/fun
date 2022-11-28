@@ -28,10 +28,11 @@ export class BtNativeScriptBle {
         UUID: uuid,
         onConnected: (perip: Peripheral) => {
           console.log("connected to " + uuid);
-          this.disconnect(uuid);
+//          this.disconnect(uuid);
           resolve(perip);
         },
         onDisconnected: (perip: Peripheral) => {
+          reject(perip);
           console.log("disconnected from " + uuid);
         },
       });
@@ -39,15 +40,15 @@ export class BtNativeScriptBle {
     return promise;
   }
   
-  disconnect(uuid: string) {
+  disconnect(uuid: string): Promise<any> {
     console.log("disconnect " + uuid);
-    this.btInstance.disconnect({UUID: uuid})
-      .then( () => {
-        console.log("disconnected " + uuid);
-      })
-      .catch( (err) => {
-        console.log("error disconnecting from " + uuid + ", err: " + JSON.stringify(err));
-      });
+    return this.btInstance.disconnect({UUID: uuid});
+//      .then( () => {
+//        console.log("disconnected " + uuid);
+//      })
+//      .catch( (err) => {
+//        console.log("error disconnecting from " + uuid + ", err: " + JSON.stringify(err));
+//      });
   }
   
   static toBtDevice(perip: Peripheral, index: number): BtDevice {

@@ -1,36 +1,36 @@
 <template>
   <StackLayout>
-    <Label v-if="currentDevice" class="theDevice">
-      <FormattedString>
-        <Span text="Index "/>
-        <Span :text="currentDevice.index"/>
-      </FormattedString>
-    </Label>
-    <Label v-if="currentDevice" class="theDevice">
-      <FormattedString>
-        <Span text="Desc "/>
-        <Span :text="currentDevice.description"/>
-      </FormattedString>
-    </Label>
-    <Label v-if="currentDevice" class="theDevice">
-      <FormattedString>
-        <Span text="Name "/>
-        <Span :text="currentDevice.name"/>
-      </FormattedString>
-    </Label>
-    <Label v-if="currentDevice" class="theDevice">
-      <FormattedString>
-        <Span text="UUID "/>
-        <Span :text="currentDevice.UUID"/>
-      </FormattedString>
-    </Label>
-    <Label v-if="currentDevice" class="theDevice">
-      <FormattedString>
-        <Span text="localName "/>
-        <Span :text="currentDevice.localName"/>
-      </FormattedString>
-    </Label>
     <template v-if="currentDevice">
+      <Label class="theDevice">
+        <FormattedString>
+          <Span text="Index "/>
+          <Span :text="currentDevice.index"/>
+        </FormattedString>
+      </Label>
+      <Label class="theDevice">
+        <FormattedString>
+          <Span text="Desc "/>
+          <Span :text="currentDevice.description"/>
+        </FormattedString>
+      </Label>
+      <Label class="theDevice">
+        <FormattedString>
+          <Span text="Name "/>
+          <Span :text="currentDevice.name"/>
+        </FormattedString>
+      </Label>
+      <Label class="theDevice">
+        <FormattedString>
+          <Span text="UUID "/>
+          <Span :text="currentDevice.UUID"/>
+        </FormattedString>
+      </Label>
+      <Label class="theDevice">
+        <FormattedString>
+          <Span text="localName "/>
+          <Span :text="currentDevice.localName"/>
+        </FormattedString>
+      </Label>
       <Label class="theDevice">
         <FormattedString>
           <Span text="RSSI "/>
@@ -45,6 +45,12 @@
       </Label>
       <Label class="theDevice">
         <FormattedString>
+          <Span text="State "/>
+          <Span :text="currentDevice.state"/>
+        </FormattedString>
+      </Label>
+      <Label class="theDevice">
+        <FormattedString>
           <Span text="Services "/>
           <Span :text="jsonServices"/>
         </FormattedString>
@@ -52,7 +58,8 @@
       <TextView class="theDevice" editable="false" maxLines="3">
         JSON {{ currentDevice.json }}
       </TextView>
-      <Button class="button" text="Connect" @tap="connect" />
+      <Button v-if="!connected" class="button" text="Connect" @tap="connect" />
+      <Button v-if="connected" class="button" text="Disconnect" @tap="disconnect" />
     </template>
 		
     <Button class="button" text="Return" @tap="onReturn" />
@@ -77,7 +84,8 @@ export default {
 		  this.$emit("connect", this.currentDevice.UUID)
 	  },
 	  disconnect() {
-		  
+	      console.log("emitting disconnect");
+	      this.$emit("disconnect", this.currentDevice.UUID)
 	  }
   },
   computed: {
@@ -90,6 +98,10 @@ export default {
 		  }
 		  else 
 			  return "";
+	  },
+	  connected() {
+		  if (this.currentDevice) return this.currentDevice.isConnected();
+		  return false;
 	  }
   }
 }
