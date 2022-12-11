@@ -3,32 +3,8 @@
     <template v-if="currentDevice">
       <Label class="theDevice">
         <FormattedString>
-          <Span text="Index "/>
-          <Span :text="currentDevice.index"/>
-        </FormattedString>
-      </Label>
-      <Label class="theDevice">
-        <FormattedString>
           <Span text="Desc "/>
           <Span :text="currentDevice.description"/>
-        </FormattedString>
-      </Label>
-      <Label class="theDevice">
-        <FormattedString>
-          <Span text="Name "/>
-          <Span :text="currentDevice.name"/>
-        </FormattedString>
-      </Label>
-      <Label class="theDevice">
-        <FormattedString>
-          <Span text="UUID "/>
-          <Span :text="currentDevice.UUID"/>
-        </FormattedString>
-      </Label>
-      <Label class="theDevice">
-        <FormattedString>
-          <Span text="localName "/>
-          <Span :text="currentDevice.localName"/>
         </FormattedString>
       </Label>
       <Label class="theDevice">
@@ -37,7 +13,31 @@
           <Span :text="currentDevice.RSSI"/>
         </FormattedString>
       </Label>
-      <Label class="theDevice">
+      <Label class="theDevice" v-if="!connected">
+        <FormattedString>
+          <Span text="Index "/>
+          <Span :text="currentDevice.index"/>
+        </FormattedString>
+      </Label>
+      <Label class="theDevice" v-if="!connected">
+        <FormattedString>
+          <Span text="Name "/>
+          <Span :text="currentDevice.name"/>
+        </FormattedString>
+      </Label>
+      <Label class="theDevice" v-if="!connected">
+        <FormattedString>
+          <Span text="UUID "/>
+          <Span :text="currentDevice.UUID"/>
+        </FormattedString>
+      </Label>
+      <Label class="theDevice" v-if="!connected">
+        <FormattedString>
+          <Span text="localName "/>
+          <Span :text="currentDevice.localName"/>
+        </FormattedString>
+      </Label>
+      <Label class="theDevice" v-if="!connected">
         <FormattedString>
           <Span text="Manufacturer "/>
           <Span :text="currentDevice.manufacturerId"/>
@@ -49,7 +49,7 @@
           <Span :text="currentDevice.state"/>
         </FormattedString>
       </Label>
-      <Label class="theDevice">
+      <Label class="theDevice" v-if="!connected">
         <FormattedString>
           <Span text="Services "/>
           <Span :text="jsonServices"/>
