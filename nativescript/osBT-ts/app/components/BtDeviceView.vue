@@ -7,42 +7,44 @@
           <Span :text="currentDevice.description"/>
         </FormattedString>
       </Label>
-      <Label class="theDevice">
-        <FormattedString>
-          <Span text="RSSI "/>
-          <Span :text="currentDevice.RSSI"/>
-        </FormattedString>
-      </Label>
-      <Label class="theDevice" v-if="!connected">
-        <FormattedString>
-          <Span text="Index "/>
-          <Span :text="currentDevice.index"/>
-        </FormattedString>
-      </Label>
-      <Label class="theDevice" v-if="!connected">
-        <FormattedString>
-          <Span text="Name "/>
-          <Span :text="currentDevice.name"/>
-        </FormattedString>
-      </Label>
-      <Label class="theDevice" v-if="!connected">
-        <FormattedString>
-          <Span text="UUID "/>
-          <Span :text="currentDevice.UUID"/>
-        </FormattedString>
-      </Label>
-      <Label class="theDevice" v-if="!connected">
-        <FormattedString>
-          <Span text="localName "/>
-          <Span :text="currentDevice.localName"/>
-        </FormattedString>
-      </Label>
-      <Label class="theDevice" v-if="!connected">
-        <FormattedString>
-          <Span text="Manufacturer "/>
-          <Span :text="currentDevice.manufacturerId"/>
-        </FormattedString>
-      </Label>
+      <ScrollView class="attrList">
+        <Label class="theDevice">
+          <FormattedString>
+            <Span text="RSSI "/>
+            <Span :text="currentDevice.RSSI"/>
+          </FormattedString>
+        </Label>
+        <Label class="theDevice" v-if="!connected">
+          <FormattedString>
+            <Span text="Index "/>
+            <Span :text="currentDevice.index"/>
+          </FormattedString>
+        </Label>
+        <Label class="theDevice" v-if="!connected">
+          <FormattedString>
+            <Span text="Name "/>
+            <Span :text="currentDevice.name"/>
+          </FormattedString>
+        </Label>
+        <Label class="theDevice" v-if="!connected">
+          <FormattedString>
+            <Span text="UUID "/>
+            <Span :text="currentDevice.UUID"/>
+          </FormattedString>
+        </Label>
+        <Label class="theDevice" v-if="!connected">
+          <FormattedString>
+            <Span text="localName "/>
+            <Span :text="currentDevice.localName"/>
+          </FormattedString>
+        </Label>
+        <Label class="theDevice" v-if="!connected">
+          <FormattedString>
+            <Span text="Manufacturer "/>
+            <Span :text="currentDevice.manufacturerId"/>
+          </FormattedString>
+        </Label>
+      </ScrollView>
       <Label class="theDevice">
         <FormattedString>
           <Span text="State "/>
@@ -83,7 +85,7 @@
 import Vue from "nativescript-vue";
 import { BtDevice, Service } from "../shared/BtDevice";
 import { DeviceState } from "../shared/DeviceState";
-//import { ScrollView } from '@nativescript/core';
+import { ScrollView } from '@nativescript/core';
 
 export default {
   props: {
@@ -128,6 +130,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .attrList {
+    height: 30em;
+  }
   .theDevice {
     font-size: 20;
   }

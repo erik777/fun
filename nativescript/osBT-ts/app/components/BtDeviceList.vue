@@ -2,7 +2,7 @@
     <StackLayout class="deviceList">
       <Button class="button" :text="refreshBtnText" @tap="onRefresh" />
       <ScrollView>
-	      <TextView class="status" editable="false" maxLines="7">
+	      <TextView class="status" editable="false" maxLines="4">
 	        {{ statusText }}
 	      </TextView>
       </ScrollView>
@@ -22,7 +22,7 @@
   import { ScrollView, Trace } from '@nativescript/core';
 
   import { Bluetooth, Peripheral, getBluetoothInstance } from '@nativescript-community/ble';
-  import { check as checkPermission, request as requestPermission } from '@nativescript-community/perms';
+  import { check as checkPermission, request as requestPermission, Result } from '@nativescript-community/perms';
 
   import { BtDevice, CurrentDevice } from "../shared/BtDevice";
   import { BtNativeScriptBle } from "../shared/BtNativeScriptBle";
@@ -123,7 +123,7 @@
             this.permissionToStatus("bluetoothScan");
         },
         permissionToStatus(permission: string) {
-            checkPermission(permission, { type: "always" }).then(response => {
+            checkPermission(permission, { type: "always" }).then(response  => {
                 console.log("checkPermissions, response: " + JSON.stringify(response));
                 this.status += " c:" + permission + ": " + JSON.stringify(response);
             }, err => {

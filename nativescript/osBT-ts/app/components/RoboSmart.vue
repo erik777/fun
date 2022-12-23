@@ -30,7 +30,7 @@
   import BtDeviceView from "./BtDeviceView";
   import { BtDevice, CurrentDevice } from "../shared/BtDevice";
   import { BtNativeScriptBle } from "../shared/BtNativeScriptBle";
-  import { robosmart } from "../shared/RoboSmart.ts";
+  import { robosmart } from "../shared/RoboSmart";
   import { DeviceState } from "~/shared/DeviceState";
 
   const btInstance = getBluetoothInstance();

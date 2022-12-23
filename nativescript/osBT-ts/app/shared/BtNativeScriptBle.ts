@@ -15,14 +15,15 @@ export class BtNativeScriptBle {
     // Throws SecurityException in stacktrace if you don't.
     this.checkPermission('location');
     this.checkPermission('bluetooth');
-    checkPermission('bluetoothScan', { type: 'always' }).then(response => {
-      console.log("checkPermissions, response: " + JSON.stringify(response));
-      this.status = response.length + " l:" + response[0];
-      requestPermission('bluetoothScan', { type: 'always' }).then(response => {
-         console.log("requestPermissions, response: " + JSON.stringify(response));
-         this.status += " lr:" + response[0];
-      });
-    });
+    this.checkPermission('bluetoothScan');
+    // checkPermission('bluetoothScan', { type: 'always' }).then(response => {
+    //   console.log("checkPermissions, response: " + JSON.stringify(response));
+    //   this.status = response.length + " l:" + response[0];
+    //   requestPermission('bluetoothScan', { type: 'always' }).then(response => {
+    //      console.log("requestPermissions, response: " + JSON.stringify(response));
+    //      this.status += " lr:" + response[0];
+    //   });
+    // });
 
     // checkPermission(['location', 'bluetooth', 'bluetoothScan'], { type: 'always' }).then(response => {
     //   console.log("checkPermissions, response: " + JSON.stringify(response));
@@ -34,14 +35,14 @@ export class BtNativeScriptBle {
     // });
   }
 
-  checkPermission<T extends Permissions>(permission: T): void {
-    checkPermission(permission).then(response => {
+  checkPermission(permission: any): void {
+    checkPermission(permission, { type: 'always' }).then(response => {
       // checkPermission(permission, { type: 'always' }).then(response => {
-      console.log("checkPermissions, response: " + JSON.stringify(response));
-      this.status = response.length + " l:" + response[0];
-      requestPermission('bluetoothScan', { type: 'always' }).then(response => {
+      console.log("checkPermission, response: " + JSON.stringify(response));
+      this.status = response.length + " cp:" + response[0];
+      requestPermission(permission, { type: 'always' }).then(response => {
          console.log("requestPermissions, response: " + JSON.stringify(response));
-         this.status += " lr:" + response[0];
+         this.status += " cpr:" + response[0];
       });
     });
   };
