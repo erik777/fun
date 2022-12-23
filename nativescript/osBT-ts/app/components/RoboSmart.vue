@@ -5,17 +5,19 @@
           <Span text.decode="&#xf135; "/>
           <Span class="bt-brand" :text="message"/>
         </FormattedString>
-      </Label> 
+      </Label>
 
-      <BtDeviceList v-if="!currentDevice" 
-        @currentDevice="onCurrentDevice($event)" 
+      <BtDeviceList v-if="!currentDevice"
+        @currentDevice="onCurrentDevice($event)"
         :bt="bt"
         />
-      <BtDeviceView v-if="currentDevice" 
-        @close="clearItem" 
+      <BtDeviceView v-if="currentDevice"
+        @close="clearItem"
         @connect="connect"
         @disconnect="disconnect"
-        :currentDevice="currentDevice"/>
+        @read="read"
+        :currentDevice="currentDevice"
+        :deviceState="deviceState"/>
     </StackLayout>
 </template>
 
@@ -23,21 +25,25 @@
   import Vue from "nativescript-vue";
   import { Bluetooth, Peripheral, getBluetoothInstance } from '@nativescript-community/ble';
   import * as dialogs from '@nativescript/core/ui/dialogs';
-  
+
   import BtDeviceList from "./BtDeviceList";
   import BtDeviceView from "./BtDeviceView";
   import { BtDevice, CurrentDevice } from "../shared/BtDevice";
   import { BtNativeScriptBle } from "../shared/BtNativeScriptBle";
+  import { robosmart } from "../shared/RoboSmart.ts";
+  import { DeviceState } from "~/shared/DeviceState";
 
   const btInstance = getBluetoothInstance();
   const bt = new BtNativeScriptBle(btInstance);
-  
+  const deviceState = new DeviceState();
+
   export default {
 	  data() {
 		  return {
 			  currentDevice: null,
 			  bt: bt,
-		    btEnabled: false
+		    btEnabled: false,
+        deviceState: deviceState,
 		  }
 	  },
 	  components: {
@@ -55,7 +61,7 @@
 //              okButtonText: 'OK, nice!'
 //          });
 //        }, 500);
-//      });		  
+//      });
 	  },
     computed: {
       message() {
@@ -74,15 +80,29 @@
     	connect(uuid: string) {
     		console.log("connecting to " + uuid);
         this.currentDevice.connecting();
-    		this.bt.connect(uuid).then( (perip: Peripheral) => {
-    	    console.log("Connected to " + perip.UUID);
-    	    this.currentDevice.connected();
-    			const device = BtNativeScriptBle.toBtDevice(perip, this.currentDevice.index);
-    			this.currentDevice = device.connected();
-    		}).catch( err => {
-    			console.log("Error connecting to " + uuid + ", err: " + JSON.stringify(err));
-    			 this.currentDevice.disconnected();
-    		});
+    		this.bt.connect(uuid)
+      		.then( (perip: Peripheral) => {
+      	    console.log("Connected to " + perip.UUID);
+      			const device = BtNativeScriptBle.toBtDevice(perip, this.currentDevice.index);
+      			this.currentDevice = device.connected();
+      		}).catch( err => {
+      			console.log("Error connecting to " + uuid + ", err: " + JSON.stringify(err));
+      			 this.currentDevice.disconnected();
+      		});
+    	},
+    	read(uuid: string) {
+        this.currentDevice.reading();
+    		this.bt.read(uuid, robosmart.service, robosmart.lightSwitch )
+    		  .then(value => {
+            console.log("value: " + value);
+            this.currentDevice.doneReading();
+            this.deviceState.lightSwitch = value;
+          })
+    		  .catch(err => {
+            console.log("error: " + err);
+            this.currentDevice.doneReadingError();
+            this.deviceState.error = err;
+          });
     	},
     	disconnect(uuid: string) {
         console.log("disconnecting " + uuid);

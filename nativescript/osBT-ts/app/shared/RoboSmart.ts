@@ -1,3 +1,8 @@
+
+// RoboSmart.ts
+//
+//   Manufacturer id 3361
+
 export const robosmart = {
     service: 'FF10',
     lightSwitch: 'FF11',

@@ -39,6 +39,9 @@ export const DISCONNECTED = "disconnected";
 export const DISCONNECTING = "disconnecting";
 export const CONNECTED = "connected";
 export const CONNECTING = "connecting";
+export const READING = "reading";
+export const READ = "done reading";
+export const READ_ERROR = "reading error";
 
 export class BtDevice {
   description: string;
@@ -50,11 +53,12 @@ export class BtDevice {
   RSSI?: number;
   manufacturerId?: number;
   services?: Service[];
+  serviceCount = 0;
   json?: string;
-  
+
   constructor (
     private other?: any
-  ) 
+  )
   {
     if (this.other) {
       this.name = this.other.name;
@@ -75,34 +79,50 @@ export class BtDevice {
         this.json = this.other.json;
       if (this.other.state)
         this.state = this.other.state;
-    } 
+    }
   }
-  
+
   connected(): BtDevice {
     this.state = CONNECTED;
     return this;
   }
-  
+
   connecting(): BtDevice {
     this.state = CONNECTING;
     return this;
   }
-  
+
   disconnected(): BtDevice {
     this.state = DISCONNECTED;
     return this;
   }
-  
+
   disconnecting(): BtDevice {
     this.state = DISCONNECTING;
     return this;
   }
-  
-  isConnected(): boolean {
-    return this.state === CONNECTED; 
+
+  doneReading(): BtDevice {
+    this.state = READ;
+    return this;
   }
-  
+
+  doneReadingError(): BtDevice {
+    this.state = READ_ERROR;
+    return this;
+  }
+
+  reading(): BtDevice {
+    this.state = READING;
+    return this;
+  }
+
+  isConnected(): boolean {
+    return this.state === CONNECTED || this.state === READING
+    || this.state === READ || this.state === READ_ERROR;
+  }
+
   isConnecting(): boolean {
-    return this.state === CONNECTING; 
+    return this.state === CONNECTING;
   }
 }
