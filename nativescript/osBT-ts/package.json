@@ -8,16 +8,17 @@
     "@nativescript-community/perms": "^2.2.13",
     "@nativescript/core": "~8.3.0",
     "@nativescript/theme": "~3.0.2",
-    "nativescript-vue": "~2.9.0"
+    "nativescript-vue": "~2.9.0",
+    "rxjs": "^7.8.0"
   },
   "devDependencies": {
     "@nativescript/android": "8.3.1",
     "@nativescript/types": "~8.3.0",
     "@nativescript/webpack": "~5.0.9",
     "@types/node": "~17.0.21",
+    "@vue/compiler-dom": "^3.2.45",
     "nativescript-vue-template-compiler": "~2.9.0",
     "typescript": "~4.5.5",
-    "@vue/compiler-dom": "^3.2.45",
     "vue": "~2.6.12"
   }
 }

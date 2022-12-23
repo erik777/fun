@@ -1,16 +1,25 @@
 import { Bluetooth, Peripheral, getBluetoothInstance, DiscoverServicesOptions, Service } from '@nativescript-community/ble';
 import { check as checkPermission, request as requestPermission, Permissions } from '@nativescript-community/perms';
 import { BtDevice } from './BtDevice';
+import { OsLogger } from './util/OsLogger';
 
 export class BtNativeScriptBle {
   status = "";
 
-  constructor(public btInstance: Bluetooth) {
+  private logger: OsLogger;
+
+  constructor(public btInstance: Bluetooth, logger?: OsLogger) {
+    if (logger) this.logger = logger;
+  }
+
+  private log(message: string): void {
+    if (this.logger) this.logger.log(message);
+    console.log(message);
   }
 
   checkPermissions(): void {
     this.status = "checking...";
-    console.log("Checking permissions " + this.status);
+    this.log("Checking permissions " + this.status);
     // TODO currently have to add 'Nearby Devices' permission manually.
     // Throws SecurityException in stacktrace if you don't.
     this.checkPermission('location');
@@ -38,22 +47,22 @@ export class BtNativeScriptBle {
   checkPermission(permission: any): void {
     checkPermission(permission, { type: 'always' }).then(response => {
       // checkPermission(permission, { type: 'always' }).then(response => {
-      console.log("checkPermission, response: " + JSON.stringify(response));
-      this.status = response.length + " cp:" + response[0];
+      this.log("checkPermission, response: " + JSON.stringify(response));
+      // this.status = response.length + " cp:" + response[0];
       requestPermission(permission, { type: 'always' }).then(response => {
-         console.log("requestPermissions, response: " + JSON.stringify(response));
-         this.status += " cpr:" + response[0];
+        //  console.log("requestPermissions, response: " + JSON.stringify(response));
+         this.log(" requestPermission, response:" + response[0]);
       });
     });
   };
 
   connect(uuid: string): Promise<Peripheral> {
     const promise = new Promise<Peripheral>( (resolve, reject) => {
-      console.log("connect(" + uuid + ") called");
+      this.log("connect(" + uuid + ") called");
       this.btInstance.connect({
         UUID: uuid,
         onConnected: (perip: Peripheral) => {
-          console.log("connected to " + uuid);
+          this.log("connected to " + uuid);
           if (perip.services)
             resolve(perip);
           else {
@@ -67,7 +76,7 @@ export class BtNativeScriptBle {
         },
         onDisconnected: (perip: Peripheral) => {
           reject(perip);
-          console.log("disconnected from " + uuid);
+          this.log("disconnected from " + uuid);
         },
       });
     });
@@ -75,13 +84,13 @@ export class BtNativeScriptBle {
   }
 
   discoverServices(options: DiscoverServicesOptions): Promise<{ services: Service[] }> {
-    console.log("connect(" + JSON.stringify(options) + ") called");
+    this.log("connect(" + JSON.stringify(options) + ") called");
     return this.btInstance.discoverServices(options);
   }
 
   read(uuid: string, serviceUUID: string, characteristicUUID: string): Promise<number> {
     const promise = new Promise<number>( (resolve, reject) => {
-      console.log("read(" + uuid + "," + serviceUUID + "," + characteristicUUID + ") called");
+      this.log("read(" + uuid + "," + serviceUUID + "," + characteristicUUID + ") called");
       this.btInstance.read({
         peripheralUUID: uuid,
         serviceUUID: serviceUUID,
@@ -94,7 +103,7 @@ export class BtNativeScriptBle {
   }
 
   disconnect(uuid: string): Promise<any> {
-    console.log("disconnect " + uuid);
+    this.log("disconnect " + uuid);
     return this.btInstance.disconnect({UUID: uuid});
   }
 
