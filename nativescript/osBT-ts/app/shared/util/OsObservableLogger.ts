@@ -12,7 +12,8 @@ export class OsObservableLogger implements OsLogger {
   }
 
   log(message: string): void {
-    this.subscriber.next(message);
+    if (this.subscriber)
+      this.subscriber.next(message);
   }
 
   subscribe(observer: Observer<string>): Subscription {

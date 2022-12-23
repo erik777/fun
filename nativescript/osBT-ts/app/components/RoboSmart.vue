@@ -10,6 +10,7 @@
       <BtDeviceList v-if="!currentDevice"
         @currentDevice="onCurrentDevice($event)"
         :bt="bt"
+        :logger="logger"
         />
       <BtDeviceView v-if="currentDevice"
         @close="clearItem"
@@ -32,9 +33,11 @@
   import { BtNativeScriptBle } from "../shared/BtNativeScriptBle";
   import { robosmart } from "../shared/RoboSmart";
   import { DeviceState } from "~/shared/DeviceState";
+import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
 
   const btInstance = getBluetoothInstance();
-  const bt = new BtNativeScriptBle(btInstance);
+  const logger = new OsObservableLogger();
+  const bt = new BtNativeScriptBle(btInstance, logger);
   const deviceState = new DeviceState();
 
   export default {
@@ -44,6 +47,7 @@
 			  bt: bt,
 		    btEnabled: false,
         deviceState: deviceState,
+        logger: logger,
 		  }
 	  },
 	  components: {
@@ -70,23 +74,23 @@
     },
     methods: {
     	onCurrentDevice(event: any) {
-    		console.log("onCurrentDevice event: " + JSON.stringify(event));
+    		this.log("onCurrentDevice event: " + JSON.stringify(event));
     		this.currentDevice = event
     	},
     	clearItem() {
-    		console.log("clearItem");
+    		this.log("clearItem");
     		this.currentDevice = null;
     	},
     	connect(uuid: string) {
-    		console.log("connecting to " + uuid);
+    		this.log("connecting to " + uuid);
         this.currentDevice.connecting();
     		this.bt.connect(uuid)
       		.then( (perip: Peripheral) => {
-      	    console.log("Connected to " + perip.UUID);
+      	    this.log("Connected to " + perip.UUID);
       			const device = BtNativeScriptBle.toBtDevice(perip, this.currentDevice.index);
       			this.currentDevice = device.connected();
       		}).catch( err => {
-      			console.log("Error connecting to " + uuid + ", err: " + JSON.stringify(err));
+      			this.log("Error connecting to " + uuid + ", err: " + JSON.stringify(err));
       			 this.currentDevice.disconnected();
       		});
     	},
@@ -94,12 +98,12 @@
         this.currentDevice.reading();
     		this.bt.read(uuid, robosmart.service, robosmart.lightSwitch )
     		  .then(value => {
-            console.log("value: " + value);
+            this.log("read value: " + value);
             this.currentDevice.doneReading();
             this.deviceState.lightSwitch = value;
           })
     		  .catch(err => {
-            console.log("error: " + err);
+            this.log("read error: " + err);
             this.currentDevice.doneReadingError();
             this.deviceState.error = err;
           });
@@ -114,7 +118,11 @@
         	console.log("Disconnecting error for " + uuid + ", err: " + JSON.stringify(err));
           this.currentDevice.disconnected();
         })
-    	}
+    	},
+      log(message: string): void {
+        console.log(message);
+        logger.log(message);
+      }
     }
   };
 </script>

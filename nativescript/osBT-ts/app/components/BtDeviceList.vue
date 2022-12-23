@@ -26,6 +26,7 @@
 
   import { BtDevice, CurrentDevice } from "../shared/BtDevice";
   import { BtNativeScriptBle } from "../shared/BtNativeScriptBle";
+import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
 
   const deviceList: BtDevice[] = [];
   let currentDevice: CurrentDevice = null;
@@ -33,7 +34,8 @@
 
   export default {
     props: {
-        bt: BtNativeScriptBle
+        bt: BtNativeScriptBle,
+        logger: OsObservableLogger,
     },
     data() {
         return {
@@ -68,6 +70,7 @@
             //      const perip = eventData.data as Peripheral;
             //          this.onDiscoveredEvent(perip);
         });
+
     },
     computed: {
         refreshBtnText() {
