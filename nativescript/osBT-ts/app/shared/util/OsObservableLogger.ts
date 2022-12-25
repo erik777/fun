@@ -1,4 +1,4 @@
-import { Observable, Observer, Subscriber, Subscription } from "rxjs";
+import { multicast, Observable, Observer, refCount, share, Subject, Subscriber, Subscription } from "rxjs";
 import { OsLogger } from "./OsLogger";
 
 export class OsObservableLogger implements OsLogger {
@@ -7,6 +7,9 @@ export class OsObservableLogger implements OsLogger {
   private observable = new Observable(subscriber => {
     this.subscriber = subscriber;
   });
+  // private subject = new Subject();
+  // private refCounted = this.observable.pipe(multicast(this.subject), refCount());
+  private shared = this.observable.pipe( share({ connector: () => new Subject() }));
 
   constructor() {
   }
