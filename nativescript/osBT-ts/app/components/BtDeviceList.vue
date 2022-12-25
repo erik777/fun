@@ -154,6 +154,7 @@
             this.isLoading = true;
             // reset the array
             // this.deviceList = [];
+            this.deviceList.splice(0);  // clear
             this.peripherals.length = 0;
             this.log("startScanning - calling");
             this.btInstance

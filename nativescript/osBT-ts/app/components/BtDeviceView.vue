@@ -57,7 +57,7 @@
           <Span :text="jsonServices"/>
         </FormattedString>
       </Label>
-      <Label class="theDevice" v-if="deviceState.lightSwitch">
+      <Label class="theDevice" v-if="deviceState.haveLightSwitch()">
         <FormattedString>
           <Span text="Light Switch "/>
           <Span :text="deviceState.lightSwitch"/>
