@@ -126,20 +126,21 @@
             this.$emit("currentDevice", this.currentDevice);
         },
         checkPermissions() {
-            const status = "checking...";
-            this.log("Checking permissions " + status);
-            this.btInstance.hasLocationPermission(result => this.status += " hlp: " + result);
+            // const status = "checking...";
+            this.log("Checking permissions... ");
+            this.btInstance.hasLocationPermission(result => this.log(" hlp: " + result + " "));
             this.permissionToStatus("location");
             this.permissionToStatus("bluetooth");
             this.permissionToStatus("bluetoothScan");
         },
-        permissionToStatus(permission: string) {
+        permissionToStatus(permission: any) {
             checkPermission(permission, { type: "always" }).then(response  => {
-                this.log("checkPermissions" + permission +
-                  ", response: " + JSON.stringify(response));
-                this.status += " c:" + permission + ": " + JSON.stringify(response);
+                this.log("checkPermissions " + permission +
+                  ", response: " + JSON.stringify(response)) + " ";
+                // this.status += " c:" + permission + ": " + JSON.stringify(response);
             }, err => {
-                this.status += " cE:" + permission + ": " + +JSON.stringify(err);
+                this.log("checkPermissions " + permission + " error : " + JSON.stringify(err) + " ");
+                // this.status += " cE:" + permission + ": " + +JSON.stringify(err);
             });
         },
         requestPermissions() {

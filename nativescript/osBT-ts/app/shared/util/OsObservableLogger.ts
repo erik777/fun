@@ -20,7 +20,7 @@ export class OsObservableLogger implements OsLogger {
   }
 
   subscribe(observer: Observer<string>): Subscription {
-    return this.observable.subscribe(observer);
+    return this.shared.subscribe(observer);
   }
 
 }
