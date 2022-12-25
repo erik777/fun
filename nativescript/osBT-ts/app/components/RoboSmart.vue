@@ -24,16 +24,16 @@
 
 <script lang="ts">
   import Vue from "nativescript-vue";
-  import { Bluetooth, Peripheral, getBluetoothInstance } from '@nativescript-community/ble';
+  import { Peripheral, getBluetoothInstance } from '@nativescript-community/ble';
   import * as dialogs from '@nativescript/core/ui/dialogs';
 
   import BtDeviceList from "./BtDeviceList";
   import BtDeviceView from "./BtDeviceView";
-  import { BtDevice, CurrentDevice } from "../shared/BtDevice";
+  // import { BtDevice, CurrentDevice } from "../shared/BtDevice";
   import { BtNativeScriptBle } from "../shared/BtNativeScriptBle";
   import { robosmart } from "../shared/RoboSmart";
   import { DeviceState } from "~/shared/DeviceState";
-import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
+  import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
 
   const btInstance = getBluetoothInstance();
   const logger = new OsObservableLogger();

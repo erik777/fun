@@ -26,11 +26,12 @@
 
   import { BtDevice, CurrentDevice } from "../shared/BtDevice";
   import { BtNativeScriptBle } from "../shared/BtNativeScriptBle";
-import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
+  import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
 
   const deviceList: BtDevice[] = [];
   let currentDevice: CurrentDevice = null;
   const peripherals = new ObservableArray<Peripheral>();
+  const status = "";
 
   export default {
     props: {
@@ -45,8 +46,11 @@ import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
             btEnabled: false,
             isLoading: false,
             peripherals: peripherals,
-            status: ""
+            status: status,
         };
+    },
+    setup() {
+
     },
     mounted() {
         // Trace.enable();    // did nothing
@@ -70,7 +74,10 @@ import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
             //      const perip = eventData.data as Peripheral;
             //          this.onDiscoveredEvent(perip);
         });
-
+        // this.status = "";
+        this.logger.subscribe(msg => this.status += msg);
+        this.log("mounted ");
+        // if (this.status !== "test") this.status = "logger failed";
     },
     computed: {
         refreshBtnText() {
@@ -108,18 +115,19 @@ import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
                     index: this.deviceList.length
                 }));
             }
-            console.log("onRefresh " + this.deviceList.length);
+            this.log("onRefresh " + this.deviceList.length);
         },
         onItemTap(event: any) {
             this.doStopScanning();
+            this.status = "";  // clear log
             console.log(event.index);
             console.log(event.item);
             this.currentDevice = event.item;
             this.$emit("currentDevice", this.currentDevice);
         },
         checkPermissions() {
-            this.status = "checking...";
-            console.log("Checking permissions " + this.status);
+            const status = "checking...";
+            this.log("Checking permissions " + status);
             this.btInstance.hasLocationPermission(result => this.status += " hlp: " + result);
             this.permissionToStatus("location");
             this.permissionToStatus("bluetooth");
@@ -127,7 +135,8 @@ import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
         },
         permissionToStatus(permission: string) {
             checkPermission(permission, { type: "always" }).then(response  => {
-                console.log("checkPermissions, response: " + JSON.stringify(response));
+                this.log("checkPermissions" + permission +
+                  ", response: " + JSON.stringify(response));
                 this.status += " c:" + permission + ": " + JSON.stringify(response);
             }, err => {
                 this.status += " cE:" + permission + ": " + +JSON.stringify(err);
@@ -144,33 +153,31 @@ import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
         doStartScanning() {
             this.isLoading = true;
             // reset the array
+            // this.deviceList = [];
             this.peripherals.length = 0;
-            console.log("startScanning - calling");
+            this.log("startScanning - calling");
             this.btInstance
                 .startScanning({
-                seconds: 4,
-                // we can't skip permissions and we need enabled location as we dont use filters:
-                // https://developer.android.com/guide/topics/connectivity/bluetooth-le
-                //                  skipPermissionCheck: false,
-                onDiscovered: (perip: Peripheral) => {
-                    this.status += " onDiscovered()";
-                    console.log(`onDiscovered()`);
-                    const btDevice = BtNativeScriptBle.toBtDevice(perip, this.deviceList.length);
-                    btDevice.description = "onDisc1 " + btDevice.description;
-                    this.deviceList.push(btDevice);
-                    //                    const perip = eventData as Peripheral;
-                    //                    console.log("Periperhal found with UUID: " + perip.UUID);
-                    //                	  this.onDiscoveredEvent(perip);
-                }
-            })
-                .then(() => {
-                this.status += "startScanning.then";
-                console.log(`startScanning - then`);
-                this.isLoading = false;
-            }, (err: any) => {
-                this.status += "startScanning.err";
-                console.log(`startScanning - err`);
-            });
+                  seconds: 4,
+                  // we can't skip permissions and we need enabled location as we dont use filters:
+                  // https://developer.android.com/guide/topics/connectivity/bluetooth-le
+                  //                  skipPermissionCheck: false,
+                  onDiscovered: (perip: Peripheral) => {
+                      // this.status += " onDiscovered()";
+                      this.log(`onDiscovered()`);
+                      const btDevice = BtNativeScriptBle.toBtDevice(perip, this.deviceList.length);
+                      btDevice.description = "onDisc1 " + btDevice.description;
+                      this.deviceList.push(btDevice);
+                  }
+              })
+              .then(() => {
+                  // this.status += "startScanning.then";
+                  this.log(` startScanning - then`);
+                  this.isLoading = false;
+              }, (err: any) => {
+                  this.status += "startScanning.err";
+                  this.log(` startScanning - err` + err);
+              });
             //              .catch(err => {
             //                  console.log(`startScanning - err`);
             //                  this.isLoading = false;
@@ -184,10 +191,10 @@ import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
         },
         doStopScanning() {
             this.btInstance.stopScanning().then(() => {
-                console.log(`stopScanning - then`);
+              this.log(` stopScanning - then`);
                 this.isLoading = false;
-            }, err => {
-                console.log(`stopScanning - err`);
+            }).catch( err => {
+                this.log(` stopScanning - err`);
                 dialogs.alert({
                     title: "Whoops!",
                     message: err,
@@ -195,6 +202,7 @@ import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
                 });
             });
         },
+        // currently not used
         onDiscoveredEvent(perip: Peripheral) {
             console.log(`onDiscoveredEvent()`);
             //          const perip = eventData.data as Peripheral;
@@ -228,6 +236,10 @@ import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
                 }));
                 this.peripherals.setItem(index, perip);
             }
+        },
+        log(message: string): void {
+          console.log(message);
+          this.logger.log(message);
         }
     }
 //    ,
