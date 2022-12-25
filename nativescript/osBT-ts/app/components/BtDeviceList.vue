@@ -74,10 +74,8 @@
             //      const perip = eventData.data as Peripheral;
             //          this.onDiscoveredEvent(perip);
         });
-        // this.status = "";
         this.logger.subscribe(msg => this.status += msg);
         this.log("mounted ");
-        // if (this.status !== "test") this.status = "logger failed";
     },
     computed: {
         refreshBtnText() {
@@ -126,7 +124,6 @@
             this.$emit("currentDevice", this.currentDevice);
         },
         checkPermissions() {
-            // const status = "checking...";
             this.log("Checking permissions... ");
             this.btInstance.hasLocationPermission(result => this.log(" hlp: " + result + " "));
             this.permissionToStatus("location");
@@ -136,17 +133,15 @@
         permissionToStatus(permission: any) {
             checkPermission(permission, { type: "always" }).then(response  => {
                 this.log("checkPermissions " + permission +
-                  ", response: " + JSON.stringify(response)) + " ";
-                // this.status += " c:" + permission + ": " + JSON.stringify(response);
+                  ", response: " + JSON.stringify(response) + " ");
             }, err => {
                 this.log("checkPermissions " + permission + " error : " + JSON.stringify(err) + " ");
-                // this.status += " cE:" + permission + ": " + +JSON.stringify(err);
             });
         },
         requestPermissions() {
             requestPermission(["location", "bluetooth", "bluetoothScan", "bluetoothConnect"], { type: "always" }).then(response => {
                 console.log("requestPermissions, response: " + JSON.stringify(response));
-                this.status += " lr:" + JSON.stringify(response);
+                this.log(" lr:" + JSON.stringify(response) + " ");
                 this.btInstance = getBluetoothInstance();
             });
         },
@@ -165,20 +160,17 @@
                   // https://developer.android.com/guide/topics/connectivity/bluetooth-le
                   //                  skipPermissionCheck: false,
                   onDiscovered: (perip: Peripheral) => {
-                      // this.status += " onDiscovered()";
-                      this.log(`onDiscovered()`);
+                      this.log(`onDiscovered() `);
                       const btDevice = BtNativeScriptBle.toBtDevice(perip, this.deviceList.length);
                       btDevice.description = "onDisc1 " + btDevice.description;
                       this.deviceList.push(btDevice);
                   }
               })
               .then(() => {
-                  // this.status += "startScanning.then";
-                  this.log(` startScanning - then`);
+                  this.log(` startScanning - then `);
                   this.isLoading = false;
               }, (err: any) => {
-                  this.status += "startScanning.err";
-                  this.log(` startScanning - err` + err);
+                  this.log(` startScanning - err ` + err);
               });
             //              .catch(err => {
             //                  console.log(`startScanning - err`);
