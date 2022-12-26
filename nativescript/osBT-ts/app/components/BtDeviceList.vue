@@ -68,7 +68,7 @@
             console.log("bluetooth_status_event fired: " + JSON.stringify(eventData));
         });
         this.checkPermissions();
-        this.requestPermissions();
+        // this.requestPermissions();
         // using an event listener instead of the 'onDiscovered' callback of 'startScanning'
         this.btInstance.on(Bluetooth.device_discovered_event, (eventData: any) => {
             //      const perip = eventData.data as Peripheral;
@@ -126,25 +126,28 @@
         checkPermissions() {
             this.log("Checking permissions... ");
             this.btInstance.hasLocationPermission(result => this.log(" hlp: " + result + " "));
-            this.permissionToStatus("location");
-            this.permissionToStatus("bluetooth");
-            this.permissionToStatus("bluetoothScan");
+            this.bt.checkPermission("location")
+            this.bt.checkPermission("bluetooth")
+            this.bt.checkPermission("bluetoothScan")
+            // this.permissionToStatus("location");
+            // this.permissionToStatus("bluetooth");
+            // this.permissionToStatus("bluetoothScan");
         },
-        permissionToStatus(permission: any) {
-            checkPermission(permission, { type: "always" }).then(response  => {
-                this.log("checkPermissions " + permission +
-                  ", response: " + JSON.stringify(response) + " ");
-            }, err => {
-                this.log("checkPermissions " + permission + " error : " + JSON.stringify(err) + " ");
-            });
-        },
-        requestPermissions() {
-            requestPermission(["location", "bluetooth", "bluetoothScan", "bluetoothConnect"], { type: "always" }).then(response => {
-                console.log("requestPermissions, response: " + JSON.stringify(response));
-                this.log(" lr:" + JSON.stringify(response) + " ");
-                this.btInstance = getBluetoothInstance();
-            });
-        },
+        // permissionToStatus(permission: any) {
+        //     checkPermission(permission, { type: "always" }).then(response  => {
+        //         this.log("checkPermissions " + permission +
+        //           ", response: " + JSON.stringify(response) + " ");
+        //     }, err => {
+        //         this.log("checkPermissions " + permission + " error : " + JSON.stringify(err) + " ");
+        //     });
+        // },
+        // requestPermissions() {
+        //     requestPermission(["location", "bluetooth", "bluetoothScan", "bluetoothConnect"], { type: "always" }).then(response => {
+        //         console.log("requestPermissions, response: " + JSON.stringify(response));
+        //         this.log(" lr:" + JSON.stringify(response) + " ");
+        //         this.btInstance = getBluetoothInstance();
+        //     });
+        // },
         // this one uses automatic permission handling
         doStartScanning() {
             this.isLoading = true;

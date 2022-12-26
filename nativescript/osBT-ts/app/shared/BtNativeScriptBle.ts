@@ -1,5 +1,5 @@
 import { Bluetooth, Peripheral, getBluetoothInstance, DiscoverServicesOptions, Service } from '@nativescript-community/ble';
-import { check as checkPermission, request as requestPermission, Permissions } from '@nativescript-community/perms';
+import { check as checkPermission, request as requestPermission, Permissions, Result } from '@nativescript-community/perms';
 import { BtDevice } from './BtDevice';
 import { OsLogger } from './util/OsLogger';
 
@@ -22,38 +22,51 @@ export class BtNativeScriptBle {
     this.log("Checking permissions " + this.status);
     // TODO currently have to add 'Nearby Devices' permission manually.
     // Throws SecurityException in stacktrace if you don't.
-    this.checkPermission('location');
-    this.checkPermission('bluetooth');
-    this.checkPermission('bluetoothScan');
-    // checkPermission('bluetoothScan', { type: 'always' }).then(response => {
-    //   console.log("checkPermissions, response: " + JSON.stringify(response));
-    //   this.status = response.length + " l:" + response[0];
-    //   requestPermission('bluetoothScan', { type: 'always' }).then(response => {
-    //      console.log("requestPermissions, response: " + JSON.stringify(response));
-    //      this.status += " lr:" + response[0];
-    //   });
-    // });
-
-    // checkPermission(['location', 'bluetooth', 'bluetoothScan'], { type: 'always' }).then(response => {
-    //   console.log("checkPermissions, response: " + JSON.stringify(response));
-    //   this.status = response.length + " l:" + response[0];
-    //   requestPermission(['location', 'bluetooth', 'bluetoothScan'], { type: 'always' }).then(response => {
-    //      console.log("requestPermissions, response: " + JSON.stringify(response));
-    //      this.status += " lr:" + response[0];
-    //   });
-    // });
+    this.checkPermission('location')
+    .then( response => this.checkPermission('bluetooth')
+      .then( response => this.checkPermission('bluetoothScan'))
+        .then( response => this.checkPermission('bluetoothConnect')
+          .then( response => this.log(" DONE checking permissions. ") )
+          .catch(err => this.log("ERROR bluetoothConnect " + err))
+        )
+        .catch(err => this.log("ERROR bluetoothScan " + err))
+      )
+      .catch(err => this.log("ERROR bluetooth " + err)
+    )
+    .catch(err => this.log("ERROR location " + err))
+    ;
   }
 
-  checkPermission(permission: any): void {
-    checkPermission(permission, { type: 'always' }).then(response => {
-      // checkPermission(permission, { type: 'always' }).then(response => {
-      this.log("checkPermission, response: " + JSON.stringify(response));
-      // this.status = response.length + " cp:" + response[0];
-      requestPermission(permission, { type: 'always' }).then(response => {
-        //  console.log("requestPermissions, response: " + JSON.stringify(response));
-         this.log(" requestPermission, response:" + response[0]);
-      });
+  checkPermission(permission: any): Promise<Result> {
+    const promise = new Promise<Result>( (resolve, reject) => {
+      checkPermission(permission, { type: 'always' })
+      .then((result: Result) => {
+        // checkPermission(permission, { type: 'always' }).then(response => {
+        const authorized = result.length > 0 && result[0] === 'authorized'
+          && result[1];
+        this.log(" Bcp.checkPermission " +
+          permission + ", response: " +
+          (authorized ? "is authorized " : JSON.stringify(result)) + " "
+        );
+          // export type Status = 'authorized' | 'denied' | 'limited' | 'restricted' | 'undetermined' | 'never_ask_again';
+        if (authorized) {
+          this.log(" " + permission + " authorized! ");
+          resolve(result);
+        } else {
+          this.log(" requesting " + permission + " ");
+          requestPermission(permission, { type: 'always' })
+          .then((response: Result) => {
+            //  console.log("requestPermissions, response: " + JSON.stringify(response));
+            this.log(" Bcp.requestPermission " + permission +
+              ", response:" + JSON.stringify(response) + " ");
+            resolve(response);
+          })
+          .catch(err => reject(err));
+        }
+      })
+      .catch(err => reject(err));
     });
+    return promise;
   };
 
   connect(uuid: string): Promise<Peripheral> {
