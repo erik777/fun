@@ -4,7 +4,7 @@ import { BtDevice } from './BtDevice';
 import { OsLogger } from './util/OsLogger';
 
 export class BtNativeScriptBle {
-  status = "";
+  // status = "";
 
   private logger: OsLogger;
 
@@ -18,22 +18,25 @@ export class BtNativeScriptBle {
   }
 
   checkPermissions(): void {
-    this.status = "checking...";
-    this.log("Checking permissions " + this.status);
+    // this.status = "checking...";
+    this.log("Checking bluetoothScan... ");
     // TODO currently have to add 'Nearby Devices' permission manually.
     // Throws SecurityException in stacktrace if you don't.
-    this.checkPermission('location')
-    .then( response => this.checkPermission('bluetooth')
-      .then( response => this.checkPermission('bluetoothScan'))
-        .then( response => this.checkPermission('bluetoothConnect')
+    this.checkPermission('bluetoothScan')
+    .then( response => {
+      this.checkPermission('bluetooth')
+      .then( response => {
+        this.checkPermission('location')
+        .then( response => {
+          this.checkPermission('bluetoothConnect')
           .then( response => this.log(" DONE checking permissions. ") )
-          .catch(err => this.log("ERROR bluetoothConnect " + err))
-        )
-        .catch(err => this.log("ERROR bluetoothScan " + err))
-      )
-      .catch(err => this.log("ERROR bluetooth " + err)
-    )
-    .catch(err => this.log("ERROR location " + err))
+          .catch(err => this.log("ERROR bluetoothConnect " + err));
+        })
+        .catch(err => this.log("ERROR location " + err));
+      })
+      .catch(err => this.log("ERROR bluetooth " + err));
+    })
+    .catch(err => this.log("ERROR bluetoothScan " + err))
     ;
   }
 

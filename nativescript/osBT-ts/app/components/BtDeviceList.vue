@@ -55,19 +55,19 @@
     mounted() {
         // Trace.enable();    // did nothing
         const haveInstance = this.btInstance ? true : false;
-        console.log(`mounted() called.  haveInstance: ` + haveInstance);
+        this.log(`mounted() called.  haveInstance: ` + haveInstance);
         this.btInstance.enable().then(enabled => {
             setTimeout(() => {
                 this.btEnabled = enabled;
                 //            if (this.btEnabled)
                 //                this.checkPermissions();
                 //          	this.doStartScanning();
+                this.checkPermissions();
             }, 500);
         });
         this.btInstance.on(Bluetooth.bluetooth_status_event, (eventData: any) => {
             console.log("bluetooth_status_event fired: " + JSON.stringify(eventData));
         });
-        this.checkPermissions();
         // this.requestPermissions();
         // using an event listener instead of the 'onDiscovered' callback of 'startScanning'
         this.btInstance.on(Bluetooth.device_discovered_event, (eventData: any) => {
@@ -126,9 +126,10 @@
         checkPermissions() {
             this.log("Checking permissions... ");
             this.btInstance.hasLocationPermission(result => this.log(" hlp: " + result + " "));
-            this.bt.checkPermission("location")
-            this.bt.checkPermission("bluetooth")
-            this.bt.checkPermission("bluetoothScan")
+            this.bt.checkPermissions();
+            // this.bt.checkPermission("location")
+            // this.bt.checkPermission("bluetooth")
+            // this.bt.checkPermission("bluetoothScan")
             // this.permissionToStatus("location");
             // this.permissionToStatus("bluetooth");
             // this.permissionToStatus("bluetoothScan");
