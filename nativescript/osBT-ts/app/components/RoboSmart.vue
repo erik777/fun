@@ -7,7 +7,7 @@
         </FormattedString>
       </Label>
 
-      <BtDeviceList v-if="!currentDevice"
+      <BtDeviceList v-show="!currentDevice"
         @currentDevice="onCurrentDevice($event)"
         :bt="bt"
         :logger="logger"
