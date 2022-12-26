@@ -22,7 +22,7 @@
   import { ScrollView, Trace } from '@nativescript/core';
 
   import { Bluetooth, Peripheral, getBluetoothInstance } from '@nativescript-community/ble';
-  import { check as checkPermission, request as requestPermission, Result } from '@nativescript-community/perms';
+//   import { check as checkPermission, request as requestPermission, Result } from '@nativescript-community/perms';
 
   import { BtDevice, CurrentDevice } from "../shared/BtDevice";
   import { BtNativeScriptBle } from "../shared/BtNativeScriptBle";
@@ -62,17 +62,9 @@
                 //            if (this.btEnabled)
                 //                this.checkPermissions();
                 //          	this.doStartScanning();
+                this.log("Checking permissions... ");
                 this.checkPermissions();
             }, 500);
-        });
-        this.btInstance.on(Bluetooth.bluetooth_status_event, (eventData: any) => {
-            console.log("bluetooth_status_event fired: " + JSON.stringify(eventData));
-        });
-        // this.requestPermissions();
-        // using an event listener instead of the 'onDiscovered' callback of 'startScanning'
-        this.btInstance.on(Bluetooth.device_discovered_event, (eventData: any) => {
-            //      const perip = eventData.data as Peripheral;
-            //          this.onDiscoveredEvent(perip);
         });
         this.logger.subscribe(msg => this.status += msg);
         this.log("mounted ");
@@ -124,36 +116,13 @@
             this.$emit("currentDevice", this.currentDevice);
         },
         checkPermissions() {
-            this.log("Checking permissions... ");
-            this.btInstance.hasLocationPermission(result => this.log(" hlp: " + result + " "));
+            // this.btInstance.hasLocationPermission(result => this.log(" hlp: " + result + " "));
             this.bt.checkPermissions();
-            // this.bt.checkPermission("location")
-            // this.bt.checkPermission("bluetooth")
-            // this.bt.checkPermission("bluetoothScan")
-            // this.permissionToStatus("location");
-            // this.permissionToStatus("bluetooth");
-            // this.permissionToStatus("bluetoothScan");
         },
-        // permissionToStatus(permission: any) {
-        //     checkPermission(permission, { type: "always" }).then(response  => {
-        //         this.log("checkPermissions " + permission +
-        //           ", response: " + JSON.stringify(response) + " ");
-        //     }, err => {
-        //         this.log("checkPermissions " + permission + " error : " + JSON.stringify(err) + " ");
-        //     });
-        // },
-        // requestPermissions() {
-        //     requestPermission(["location", "bluetooth", "bluetoothScan", "bluetoothConnect"], { type: "always" }).then(response => {
-        //         console.log("requestPermissions, response: " + JSON.stringify(response));
-        //         this.log(" lr:" + JSON.stringify(response) + " ");
-        //         this.btInstance = getBluetoothInstance();
-        //     });
-        // },
         // this one uses automatic permission handling
         doStartScanning() {
             this.isLoading = true;
             // reset the array
-            // this.deviceList = [];
             this.deviceList.splice(0);  // clear
             this.peripherals.length = 0;
             this.log("startScanning - calling");
@@ -240,8 +209,6 @@
           this.logger.log(message);
         }
     }
-//    ,
-//    components: { ScrollView }
 };
 </script>
 
