@@ -83,7 +83,7 @@
 
 <script lang="ts">
 import Vue from "nativescript-vue";
-import { BtDevice, Service } from "../shared/BtDevice";
+import { BtDevice } from "../shared/ble/BtDevice";
 import { DeviceState } from "../shared/DeviceState";
 import { ScrollView } from '@nativescript/core';
 

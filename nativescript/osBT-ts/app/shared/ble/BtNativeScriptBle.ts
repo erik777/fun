@@ -1,7 +1,7 @@
 import { Bluetooth, Peripheral, getBluetoothInstance, DiscoverServicesOptions, Service } from '@nativescript-community/ble';
 import { check as checkPermission, request as requestPermission, Permissions, Result } from '@nativescript-community/perms';
 import { BtDevice } from './BtDevice';
-import { OsLogger } from './util/OsLogger';
+import { OsLogger } from '../util/OsLogger';
 
 export class BtNativeScriptBle {
   // status = "";

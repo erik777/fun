@@ -21,11 +21,10 @@
   import * as dialogs from '@nativescript/core/ui/dialogs';
   import { ScrollView, Trace } from '@nativescript/core';
 
-  import { Bluetooth, Peripheral, getBluetoothInstance } from '@nativescript-community/ble';
-//   import { check as checkPermission, request as requestPermission, Result } from '@nativescript-community/perms';
+  import { Peripheral } from '@nativescript-community/ble';
 
-  import { BtDevice, CurrentDevice } from "../shared/BtDevice";
-  import { BtNativeScriptBle } from "../shared/BtNativeScriptBle";
+  import { BtDevice, CurrentDevice } from "../shared/ble/BtDevice";
+  import { BtNativeScriptBle } from "../shared/ble/BtNativeScriptBle";
   import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
 
   const deviceList: BtDevice[] = [];
@@ -126,6 +125,7 @@
             this.deviceList.splice(0);  // clear
             this.peripherals.length = 0;
             this.log("startScanning - calling");
+            this.$emit("startScanning");
             this.btInstance
                 .startScanning({
                   seconds: 4,

@@ -9,6 +9,7 @@
 
       <BtDeviceList v-show="!currentDevice"
         @currentDevice="onCurrentDevice($event)"
+        @startScanning="onStartScanning"
         :bt="bt"
         :logger="logger"
         />
@@ -29,8 +30,7 @@
 
   import BtDeviceList from "./BtDeviceList";
   import BtDeviceView from "./BtDeviceView";
-  // import { BtDevice, CurrentDevice } from "../shared/BtDevice";
-  import { BtNativeScriptBle } from "../shared/BtNativeScriptBle";
+  import { BtNativeScriptBle } from "../shared/ble/BtNativeScriptBle";
   import { robosmart } from "../shared/RoboSmart";
   import { DeviceState } from "~/shared/DeviceState";
   import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
@@ -81,6 +81,9 @@
       }
     },
     methods: {
+      onStartScanning() {
+        this.log("startScanning ")
+      },
     	onCurrentDevice(event: any) {
     		this.log("onCurrentDevice event: " + JSON.stringify(event));
     		this.currentDevice = event
