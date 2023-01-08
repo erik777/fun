@@ -49,7 +49,9 @@
         };
     },
     setup() {
-
+        this.bt.getScanningEmmiter().onDone(v => {
+//here
+        });
     },
     mounted() {
         // Trace.enable();    // did nothing

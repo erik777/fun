@@ -2,7 +2,7 @@ import { Bluetooth, Peripheral, getBluetoothInstance, DiscoverServicesOptions, S
 import { check as checkPermission, request as requestPermission, Permissions, Result } from '@nativescript-community/perms';
 import { BtDevice } from './BtDevice';
 import { OsLogger } from '../util/OsLogger';
-import { OsSharedObservable } from '../util/OsSharedEmmiter';
+import { OsSharedObservable } from '../util/OsSharedObservable';
 
 export class BtNativeScriptBle {
 
