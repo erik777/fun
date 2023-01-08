@@ -2,11 +2,12 @@ import { Bluetooth, Peripheral, getBluetoothInstance, DiscoverServicesOptions, S
 import { check as checkPermission, request as requestPermission, Permissions, Result } from '@nativescript-community/perms';
 import { BtDevice } from './BtDevice';
 import { OsLogger } from '../util/OsLogger';
+import { OsSharedObservable } from '../util/OsSharedEmmiter';
 
 export class BtNativeScriptBle {
-  // status = "";
 
   private logger: OsLogger;
+  private scanningEmmiter = new OsSharedObservable<BtDevice>();
 
   constructor(public btInstance: Bluetooth, logger?: OsLogger) {
     if (logger) this.logger = logger;
@@ -18,7 +19,6 @@ export class BtNativeScriptBle {
   }
 
   checkPermissions(): void {
-    // this.status = "checking...";
     this.log("Checking bluetoothScan... ");
     // TODO currently have to add 'Nearby Devices' permission manually.
     // Throws SecurityException in stacktrace if you don't.
@@ -121,6 +121,34 @@ export class BtNativeScriptBle {
   disconnect(uuid: string): Promise<any> {
     this.log("disconnect " + uuid);
     return this.btInstance.disconnect({UUID: uuid});
+  }
+
+  getScanningEmmiter(): OsSharedObservable<BtDevice> {
+    return this.scanningEmmiter;
+  }
+
+  startScanning(): OsSharedObservable<BtDevice> {
+    let index = 0;
+    this.btInstance
+      .startScanning({
+        seconds: 4,
+        // we can't skip permissions and we need enabled location as we dont use filters:
+        // https://developer.android.com/guide/topics/connectivity/bluetooth-le
+        //                  skipPermissionCheck: false,
+        onDiscovered: (perip: Peripheral) => {
+            this.log(`onDiscovered `);
+            const btDevice = BtNativeScriptBle.toBtDevice(perip, index++);
+            btDevice.description = "onDisc1 " + btDevice.description;
+            this.scanningEmmiter.send(btDevice);
+        }
+    })
+    .then(() => {
+        this.log(` startScanning - complete `);
+    }, (err: any) => {
+        this.log(` startScanning - err ` + err);
+    });
+
+    return this.getScanningEmmiter();
   }
 
   static toBtDevice(perip: Peripheral, index: number): BtDevice {
