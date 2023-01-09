@@ -66,10 +66,10 @@
       <TextView class="theDevice" v-if="deviceState.error" maxLines="2">
            {{ deviceState.error }}
       </TextView>
-      <TextView class="theDevice" v-if="!deviceState.error" maxLines="2">
+      <TextView class="theDevice" v-if="debug && !deviceState.error" maxLines="2">
            {{ deviceState | json }}
       </TextView>
-      <TextView class="theDevice" editable="false" maxLines="3">
+      <TextView v-if="debug" class="theDevice" editable="false" maxLines="3">
         {{ currentDevice.json }}
       </TextView>
       <Button v-if="!connected" class="button" text="Connect" @tap="connect" />
@@ -91,6 +91,9 @@ export default {
   props: {
 	  currentDevice: BtDevice,
     deviceState: DeviceState,
+  },
+  data: {
+    debug: false
   },
   methods: {
 	  onReturn() {

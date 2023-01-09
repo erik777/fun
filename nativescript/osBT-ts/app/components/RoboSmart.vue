@@ -12,6 +12,7 @@
         @startScanning="onStartScanning"
         :bt="bt"
         :logger="logger"
+        :appState="appState"
         />
       <BtDeviceView v-if="currentDevice"
         @close="clearItem"
@@ -34,6 +35,7 @@
   import { robosmart } from "../shared/RoboSmart";
   import { DeviceState } from "~/shared/DeviceState";
   import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
+  import { AppState } from "~/shared/AppState";
 
   const btInstance = getBluetoothInstance();
   const logger = new OsObservableLogger();
@@ -45,7 +47,7 @@
 		  return {
 			  currentDevice: null,
 			  bt: btNSBLE,
-		    btEnabled: false,
+		    appState: new AppState(),
         deviceState: deviceState,
         logger: logger,
 		  }
@@ -55,6 +57,18 @@
 		  BtDeviceView,
 	  },
 	  mounted() {
+      // this.log(`RS.mounted() called. `);
+      this.bt.enable().then(enabled => {
+          setTimeout(() => {
+              this.appState.enabled = enabled;
+              //            if (this.btEnabled)
+              //                this.checkPermissions();
+              //          	this.doStartScanning();
+              this.log("RS.checkPermissions " + this.appState.enabled + "... ");
+              this.bt.checkPermissions();
+          }, 500);
+      });
+      this.log("RS.mounted ");
 
 //		  console.log(`mounted() called.`);
 //      this.btInstance.enable().then(enabled => {

@@ -16,9 +16,9 @@
 </template>
 
 <script lang="ts">
-  import Vue from "nativescript-vue";
+//   import Vue from "nativescript-vue";
+//   import * as dialogs from '@nativescript/core/ui/dialogs';
   import { ObservableArray } from '@nativescript/core/data/observable-array';
-  import * as dialogs from '@nativescript/core/ui/dialogs';
   import { ScrollView, Trace } from '@nativescript/core';
 
   import { Peripheral } from '@nativescript-community/ble';
@@ -26,7 +26,7 @@
   import { BtDevice, CurrentDevice } from "../shared/ble/BtDevice";
   import { BtNativeScriptBle } from "../shared/ble/BtNativeScriptBle";
   import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
-import { Subscription } from "rxjs";
+  import { AppState } from "~/shared/AppState";
 
   const deviceList: BtDevice[] = [];
   let currentDevice: CurrentDevice = null;
@@ -37,13 +37,12 @@ import { Subscription } from "rxjs";
     props: {
         bt: BtNativeScriptBle,
         logger: OsObservableLogger,
+        appState: AppState,
     },
     data() {
         return {
             deviceList: deviceList,
             currentDevice: currentDevice,
-            // btInstance: this.bt.btInstance,
-            btEnabled: false,
             isLoading: false,
             peripherals: peripherals,
             status: status,
@@ -58,22 +57,24 @@ import { Subscription } from "rxjs";
     mounted() {
         this.logger.subscribe(msg => this.status += msg);
         // Trace.enable();    // did nothing
-        // const haveInstance = this.btInstance ? true : false;
-        this.log(`mounted() called.`);
-        this.bt.enable().then(enabled => {
-            setTimeout(() => {
-                this.btEnabled = enabled;
-                //            if (this.btEnabled)
-                //                this.checkPermissions();
-                //          	this.doStartScanning();
-                this.log("Checking permissions... ");
-                this.checkPermissions();
-            }, 500);
-        });
-        this.log("mounted ");
+        // this.log(`mounted() called.`);
+        // this.bt.enable().then(enabled => {
+        //     setTimeout(() => {
+        //         this.btEnabled = enabled;
+        //         //            if (this.btEnabled)
+        //         //                this.checkPermissions();
+        //         //          	this.doStartScanning();
+        //         this.log("Checking permissions... ");
+        //         this.checkPermissions();
+        //     }, 500);
+        // });
+        this.log("LIST.mounted ");
         this.initSubscriptions();
     },
     computed: {
+        btEnabled() {
+            return this.appState && this.appState.enabled;
+        },
         refreshBtnText() {
             return this.btEnabled ?
                 (this.isLoading ? "Refresh (scan)" : "Refresh")
@@ -134,7 +135,7 @@ import { Subscription } from "rxjs";
             }
             else {
                 this.deviceList.push(new BtDevice({
-                    description: "blah " + this.deviceList.length,
+                    description: "blah " + this.appState.enabled + " " + this.deviceList.length,
                     name: "blah " + this.deviceList.length,
                     index: this.deviceList.length
                 }));
