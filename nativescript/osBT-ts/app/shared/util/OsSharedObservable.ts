@@ -23,9 +23,13 @@ export class OsSharedObservable<MessageType> {
   constructor() {
   }
 
-  send(message: MessageType): void {
-    if (this.subscriber)
+  send(message: MessageType): boolean {
+    if (this.subscriber) {
       this.subscriber.next(message);
+      return true;
+    }
+    else
+      return false;
   }
 
   error(message: any): void {
@@ -35,7 +39,7 @@ export class OsSharedObservable<MessageType> {
 
   done(): void {
     if (this.subscriberDone)
-      this.subscriber.next();
+      this.subscriberDone.next();
   }
 
   onMessage(observer: Observer<MessageType>): Subscription {

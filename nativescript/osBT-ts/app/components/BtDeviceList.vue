@@ -26,6 +26,7 @@
   import { BtDevice, CurrentDevice } from "../shared/ble/BtDevice";
   import { BtNativeScriptBle } from "../shared/ble/BtNativeScriptBle";
   import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
+import { Subscription } from "rxjs";
 
   const deviceList: BtDevice[] = [];
   let currentDevice: CurrentDevice = null;
@@ -46,12 +47,12 @@
             isLoading: false,
             peripherals: peripherals,
             status: status,
+            subScanDone: undefined,
+            subScanErr: undefined,
+            subScanMessage: undefined,
         };
     },
     setup() {
-        this.bt.getScanningEmmiter().onDone(v => {
-//here
-        });
     },
     mounted() {
         // Trace.enable();    // did nothing
@@ -69,6 +70,7 @@
         });
         this.logger.subscribe(msg => this.status += msg);
         this.log("mounted ");
+        this.initSubscriptions();
     },
     computed: {
         refreshBtnText() {
@@ -90,6 +92,37 @@
         }
     },
     methods: {
+        initSubscriptions() {
+            this.log(" initSubscriptions ");
+            // TODO need to unsubscribe on component destruction
+            if (!this.subScanDone)
+                this.subScanDone = this.bt.getScanningEmmiter().onDone(v => {
+                    this.log(` scanning - done `);
+                    this.isLoading = false;
+                });
+
+            if (!this.subScanErr)
+                this.subScanErr = this.bt.getScanningEmmiter().onError(err => {
+                    this.log(` scanning - err ` + err);
+                });
+
+            if (!this.subScanMessage) {
+                this.subScanMessage = this.bt.getScanningEmmiter().onMessage(perip => {
+                    if (perip) {
+                        this.log(`onDisco `);
+                        const btDevice = BtNativeScriptBle.toBtDevice(perip, this.deviceList.length);
+                        btDevice.description = "onDisc1 " + btDevice.description;
+                        this.deviceList.push(btDevice);
+                    } else {
+                        this.log(`subScanMessage ERROR: empty perip `);
+                    }
+                });
+                this.log(" Subscribed for scanning! ");
+            } else {
+                this.log(" Already subscribed! ");
+            }
+//here
+        },
         onRefresh() {
             if (this.btEnabled) {
                 this.doStartScanning();
@@ -128,25 +161,26 @@
             this.peripherals.length = 0;
             this.log("startScanning - calling");
             this.$emit("startScanning");
-            this.btInstance
-                .startScanning({
-                  seconds: 4,
-                  // we can't skip permissions and we need enabled location as we dont use filters:
-                  // https://developer.android.com/guide/topics/connectivity/bluetooth-le
-                  //                  skipPermissionCheck: false,
-                  onDiscovered: (perip: Peripheral) => {
-                      this.log(`onDiscovered() `);
-                      const btDevice = BtNativeScriptBle.toBtDevice(perip, this.deviceList.length);
-                      btDevice.description = "onDisc1 " + btDevice.description;
-                      this.deviceList.push(btDevice);
-                  }
-              })
-              .then(() => {
-                  this.log(` startScanning - then `);
-                  this.isLoading = false;
-              }, (err: any) => {
-                  this.log(` startScanning - err ` + err);
-              });
+            // this.btInstance
+            //     .startScanning({
+            //       seconds: 4,
+            //       // we can't skip permissions and we need enabled location as we dont use filters:
+            //       // https://developer.android.com/guide/topics/connectivity/bluetooth-le
+            //       //                  skipPermissionCheck: false,
+            //       onDiscovered: (perip: Peripheral) => {
+            //           this.log(`onDiscovered() `);
+            //           const btDevice = BtNativeScriptBle.toBtDevice(perip, this.deviceList.length);
+            //           btDevice.description = "onDisc1 " + btDevice.description;
+            //           this.deviceList.push(btDevice);
+            //       }
+            //   })
+            //   .then(() => {
+            //       this.log(` startScanning - then `);
+            //       this.isLoading = false;
+            //   }, (err: any) => {
+            //       this.log(` startScanning - err ` + err);
+            //   });
+
             //              .catch(err => {
             //                  console.log(`startScanning - err`);
             //                  this.isLoading = false;

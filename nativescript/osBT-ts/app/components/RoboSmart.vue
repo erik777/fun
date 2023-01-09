@@ -37,14 +37,14 @@
 
   const btInstance = getBluetoothInstance();
   const logger = new OsObservableLogger();
-  const bt = new BtNativeScriptBle(btInstance, logger);
+  const btNSBLE = new BtNativeScriptBle(btInstance, logger);
   const deviceState = new DeviceState();
 
   export default {
 	  data() {
 		  return {
 			  currentDevice: null,
-			  bt: bt,
+			  bt: btNSBLE,
 		    btEnabled: false,
         deviceState: deviceState,
         logger: logger,
@@ -82,7 +82,8 @@
     },
     methods: {
       onStartScanning() {
-        this.log("startScanning ")
+        this.log("startScanning ");
+        this.bt.startScanning();
       },
     	onCurrentDevice(event: any) {
     		this.log("onCurrentDevice event: " + JSON.stringify(event));

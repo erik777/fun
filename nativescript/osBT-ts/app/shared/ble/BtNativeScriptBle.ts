@@ -136,16 +136,19 @@ export class BtNativeScriptBle {
         // https://developer.android.com/guide/topics/connectivity/bluetooth-le
         //                  skipPermissionCheck: false,
         onDiscovered: (perip: Peripheral) => {
-            this.log(`onDiscovered `);
+            this.log(` BLE.onDisc `);
             const btDevice = BtNativeScriptBle.toBtDevice(perip, index++);
             btDevice.description = "onDisc1 " + btDevice.description;
-            this.scanningEmmiter.send(btDevice);
+            if (!this.scanningEmmiter.send(btDevice))
+              this.log(" Cannot send! ");
         }
     })
     .then(() => {
         this.log(` startScanning - complete `);
+        this.scanningEmmiter.done();
     }, (err: any) => {
         this.log(` startScanning - err ` + err);
+        this.scanningEmmiter.error(err);
     });
 
     return this.getScanningEmmiter();
