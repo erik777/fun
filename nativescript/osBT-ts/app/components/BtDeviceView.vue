@@ -58,7 +58,7 @@
       <Label class="theDevice" v-if="deviceState.haveLightSwitch()">
         <FormattedString>
           <Span text="Light Switch "/>
-          <Span :text="deviceState.lightSwitch"/>
+          <Span :text="lightSwitch"/>
         </FormattedString>
       </Label>
       <Label class="theDevice" v-if="deviceState.haveBrightness()">
@@ -68,7 +68,13 @@
         </FormattedString>
       </Label>
       <Switch v-show="deviceState.haveLightSwitch()"
-        v-model="lightSwitch" class="switch" />
+        :checked="deviceState.isLightOn()"
+        @checkedChange="onLightSwitchChange($event)"
+        class="switch" />
+      <Slider v-show="deviceState.haveBrightness()"
+        :value="deviceState.brightness"
+        @valueChange="onBrightnessChange($event)"
+        maxValue="255" />
       <TextView class="theDevice" v-if="deviceState.error" maxLines="2">
            {{ deviceState.error }}
       </TextView>
@@ -99,7 +105,8 @@ export default {
 	  currentDevice: BtDevice,
     deviceState: DeviceState,
     logger: OsObservableLogger,
-    lightSwitch: Number
+    lightSwitch: Number,
+    brightness: Number
   },
   data: {
     debug: false
@@ -111,20 +118,28 @@ export default {
 		  this.$emit("close", true);
 	  },
 	  connect() {
-	    console.log("emitting connect");
+	    this.log(" emitting connect ");
 		  this.$emit("connect", this.currentDevice.UUID)
 	  },
 	  disconnect() {
-	    console.log("emitting disconnect");
+	    this.log(" emitting disconnect ");
 	    this.$emit("disconnect", this.currentDevice.UUID)
 	  },
 	  read() {
-      console.log("emitting read");
+      this.log(" emitting read ");
       this.$emit("read", this.currentDevice.UUID)
 	  },
+    onBrightnessChange(event) {
+      this.log(" brightness changed to " + event.value );
+      if (event.value !== this.deviceState.brightness)
+        this.$emit("changeBrightness", event.value);
+    },
+    onLightSwitchChange(event) {
+      this.log(" lightSwitch changed to " + event.value );
+    },
     log(message: string): void {
       console.log(message);
-//      this.logger.log(message);
+      this.logger.log(message);
     }
   },
   computed: {

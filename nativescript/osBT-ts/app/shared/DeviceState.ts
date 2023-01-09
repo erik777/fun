@@ -7,6 +7,10 @@ export class DeviceState {
     return this.lightSwitch !== undefined;
   }
 
+  isLightOn(): boolean {
+    return this.haveLightSwitch() && this.lightSwitch === 1;
+  }
+
   haveBrightness(): boolean {
     return this.brightness !== undefined;
   }

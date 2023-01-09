@@ -19,10 +19,14 @@
         @connect="connect"
         @disconnect="disconnect"
         @read="read"
+        @changeLightSwitch="changeLightSwitch"
+        @changeBrightness="changeBrightness"
         :logger="logger"
         :currentDevice="currentDevice"
         :deviceState="deviceState"
-        v-bind="deviceState"/>
+        :lightSwitch="deviceState.lightSwitch === 1"
+        :brightness="deviceState.brightness"
+      />
     </StackLayout>
 </template>
 
@@ -158,6 +162,12 @@
             this.currentDevice.doneReadingError();
           });
     	},
+      changeLightSwitch(value: boolean) {
+        this.log(" RS.changeLightSwitch " + value);
+      },
+      changeBrightness(value: number) {
+        this.log(" RS.changeBrightness " + value);
+      },
     	disconnect(uuid: string) {
         this.log(" disconnecting " + uuid);
         if (this.currentDevice) {
