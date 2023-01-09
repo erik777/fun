@@ -104,6 +104,15 @@ export class BtNativeScriptBle {
     return this.btInstance.discoverServices(options);
   }
 
+  enable(): Promise<boolean> {
+    const promise = new Promise<boolean>( (resolve, reject) => {
+      this.btInstance.enable()
+        .then(enabled => resolve(enabled))
+        .catch(err => reject(err));
+    });
+    return promise;
+  }
+
   read(uuid: string, serviceUUID: string, characteristicUUID: string): Promise<number> {
     const promise = new Promise<number>( (resolve, reject) => {
       this.log("read(" + uuid + "," + serviceUUID + "," + characteristicUUID + ") called");

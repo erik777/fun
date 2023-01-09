@@ -55,6 +55,7 @@
 		  BtDeviceView,
 	  },
 	  mounted() {
+
 //		  console.log(`mounted() called.`);
 //      this.btInstance.enable().then(enabled => {
 //        setTimeout(() => {

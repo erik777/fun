@@ -42,7 +42,7 @@ import { Subscription } from "rxjs";
         return {
             deviceList: deviceList,
             currentDevice: currentDevice,
-            btInstance: this.bt.btInstance,
+            // btInstance: this.bt.btInstance,
             btEnabled: false,
             isLoading: false,
             peripherals: peripherals,
@@ -53,12 +53,14 @@ import { Subscription } from "rxjs";
         };
     },
     setup() {
+        this.initSubscriptions();
     },
     mounted() {
+        this.logger.subscribe(msg => this.status += msg);
         // Trace.enable();    // did nothing
-        const haveInstance = this.btInstance ? true : false;
-        this.log(`mounted() called.  haveInstance: ` + haveInstance);
-        this.btInstance.enable().then(enabled => {
+        // const haveInstance = this.btInstance ? true : false;
+        this.log(`mounted() called.`);
+        this.bt.enable().then(enabled => {
             setTimeout(() => {
                 this.btEnabled = enabled;
                 //            if (this.btEnabled)
@@ -68,7 +70,6 @@ import { Subscription } from "rxjs";
                 this.checkPermissions();
             }, 500);
         });
-        this.logger.subscribe(msg => this.status += msg);
         this.log("mounted ");
         this.initSubscriptions();
     },
@@ -121,7 +122,6 @@ import { Subscription } from "rxjs";
             } else {
                 this.log(" Already subscribed! ");
             }
-//here
         },
         onRefresh() {
             if (this.btEnabled) {
