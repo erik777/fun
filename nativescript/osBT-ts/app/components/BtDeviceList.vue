@@ -150,7 +150,6 @@ import { Subscription } from "rxjs";
             this.$emit("currentDevice", this.currentDevice);
         },
         checkPermissions() {
-            // this.btInstance.hasLocationPermission(result => this.log(" hlp: " + result + " "));
             this.bt.checkPermissions();
         },
         // this one uses automatic permission handling
@@ -161,35 +160,6 @@ import { Subscription } from "rxjs";
             this.peripherals.length = 0;
             this.log("startScanning - calling");
             this.$emit("startScanning");
-            // this.btInstance
-            //     .startScanning({
-            //       seconds: 4,
-            //       // we can't skip permissions and we need enabled location as we dont use filters:
-            //       // https://developer.android.com/guide/topics/connectivity/bluetooth-le
-            //       //                  skipPermissionCheck: false,
-            //       onDiscovered: (perip: Peripheral) => {
-            //           this.log(`onDiscovered() `);
-            //           const btDevice = BtNativeScriptBle.toBtDevice(perip, this.deviceList.length);
-            //           btDevice.description = "onDisc1 " + btDevice.description;
-            //           this.deviceList.push(btDevice);
-            //       }
-            //   })
-            //   .then(() => {
-            //       this.log(` startScanning - then `);
-            //       this.isLoading = false;
-            //   }, (err: any) => {
-            //       this.log(` startScanning - err ` + err);
-            //   });
-
-            //              .catch(err => {
-            //                  console.log(`startScanning - err`);
-            //                  this.isLoading = false;
-            //                  dialogs.alert({
-            //                      title: 'Whoops!',
-            //                      message: err ? err : 'Unknown error',
-            //                      okButtonText: 'OK, got it'
-            //                  });
-            //              });
             console.log("startScanning - called");
         },
         doStopScanning() {
