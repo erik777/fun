@@ -125,4 +125,12 @@ export class BtDevice {
   isConnecting(): boolean {
     return this.state === CONNECTING;
   }
+
+  isValid(): boolean {
+    return this.index > -1;
+  }
+
+  clear(): void {
+    this.index = -1;
+  }
 }

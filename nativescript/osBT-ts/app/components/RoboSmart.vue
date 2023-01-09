@@ -7,21 +7,22 @@
         </FormattedString>
       </Label>
 
-      <BtDeviceList v-show="!currentDevice"
+      <BtDeviceList v-show="!currentDevice || !currentDevice.isValid()"
         @currentDevice="onCurrentDevice($event)"
         @startScanning="onStartScanning"
         :bt="bt"
         :logger="logger"
         :appState="appState"
         />
-      <BtDeviceView v-if="currentDevice"
+      <BtDeviceView v-if="currentDevice && currentDevice.isValid()"
         @close="clearItem"
         @connect="connect"
         @disconnect="disconnect"
         @read="read"
         :logger="logger"
         :currentDevice="currentDevice"
-        :deviceState="deviceState"/>
+        :deviceState="deviceState"
+        v-bind="deviceState"/>
     </StackLayout>
 </template>
 
@@ -35,6 +36,7 @@
   import { BtNativeScriptBle } from "../shared/ble/BtNativeScriptBle";
   import { robosmart } from "../shared/RoboSmart";
   import { DeviceState } from "~/shared/DeviceState";
+  import { BtDevice } from "~/shared/ble/BtDevice";
   import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
   import { AppState } from "~/shared/AppState";
 
@@ -43,10 +45,12 @@
   const btNSBLE = new BtNativeScriptBle(btInstance, logger);
   const deviceState = new DeviceState();
 
+  // TODO needs for currentDevice to be a singleton
+
   export default {
 	  data() {
 		  return {
-			  currentDevice: null,
+			  currentDevice: new BtDevice(),
 			  bt: btNSBLE,
 		    appState: new AppState(),
         deviceState: deviceState,
@@ -111,11 +115,13 @@
     	},
     	clearItem() {
     		this.log(" RS.clearItem ");
-    		this.currentDevice = null;
+    		// this.currentDevice = null;
+        this.deviceState.clear();
+    		this.currentDevice.clear();
     	},
     	connect(uuid: string) {
     		this.log(" connecting to " + uuid);
-        this.currentDevice.connecting();
+        if (this.currentDevice) this.currentDevice.connecting();
     		this.bt.connect(uuid)
       		.then( (perip: Peripheral) => {
       	    this.log(" Connected to " + perip.UUID);
@@ -123,7 +129,7 @@
       			this.currentDevice = device.connected();
       		}).catch( err => {
       			this.log(" Error connecting to " + uuid + ", err: " + JSON.stringify(err));
-      			 this.currentDevice.disconnected();
+      			if (this.currentDevice) this.currentDevice.disconnected();
       		});
     	},
     	read(uuid: string) {

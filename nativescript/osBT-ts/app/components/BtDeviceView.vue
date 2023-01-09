@@ -98,7 +98,8 @@ export default {
   props: {
 	  currentDevice: BtDevice,
     deviceState: DeviceState,
-    logger: OsObservableLogger
+    logger: OsObservableLogger,
+    lightSwitch: Number
   },
   data: {
     debug: false
@@ -127,14 +128,14 @@ export default {
     }
   },
   computed: {
-    lightSwitch: {
-      get(): boolean {
-        return this.deviceState.lightSwitch === 1;
-      },
-      set(value: boolean) {
-        // TODO write value
-      }
-    },
+    // lightSwitchCalc: {
+    //   get(): boolean {
+    //     return this.deviceState.lightSwitch === 1;
+    //   },
+    //   set(value: boolean) {
+    //     // TODO write value
+    //   }
+    // },
 	  jsonServices() {
 		  if (this.currentDevice) {
         if (this.currentDevice.services)

@@ -10,4 +10,10 @@ export class DeviceState {
   haveBrightness(): boolean {
     return this.brightness !== undefined;
   }
+
+  clear(): void {
+    this.lightSwitch = undefined;
+    this.brightness = undefined;
+    this.error = undefined;
+  }
 }
