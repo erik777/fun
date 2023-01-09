@@ -7,20 +7,19 @@
           <Span :text="currentDevice.description"/>
         </FormattedString>
       </Label>
-      <ScrollView class="attrList">
         <Label class="theDevice">
           <FormattedString>
             <Span text="RSSI "/>
             <Span :text="currentDevice.RSSI"/>
           </FormattedString>
         </Label>
-        <Label class="theDevice" v-if="!connected">
+        <Label class="theDevice" v-if="debug && !connected">
           <FormattedString>
             <Span text="Index "/>
             <Span :text="currentDevice.index"/>
           </FormattedString>
         </Label>
-        <Label class="theDevice" v-if="!connected">
+        <Label class="theDevice" v-if="debug && !connected">
           <FormattedString>
             <Span text="Name "/>
             <Span :text="currentDevice.name"/>
@@ -32,7 +31,7 @@
             <Span :text="currentDevice.UUID"/>
           </FormattedString>
         </Label>
-        <Label class="theDevice" v-if="!connected">
+        <Label class="theDevice" v-if="debug && !connected">
           <FormattedString>
             <Span text="localName "/>
             <Span :text="currentDevice.localName"/>
@@ -44,7 +43,6 @@
             <Span :text="currentDevice.manufacturerId"/>
           </FormattedString>
         </Label>
-      </ScrollView>
       <Label class="theDevice">
         <FormattedString>
           <Span text="State "/>
@@ -63,6 +61,14 @@
           <Span :text="deviceState.lightSwitch"/>
         </FormattedString>
       </Label>
+      <Label class="theDevice" v-if="deviceState.haveBrightness()">
+        <FormattedString>
+          <Span text="Brightness "/>
+          <Span :text="deviceState.brightness"/>
+        </FormattedString>
+      </Label>
+      <Switch v-show="deviceState.haveLightSwitch()"
+        v-model="lightSwitch" class="switch" />
       <TextView class="theDevice" v-if="deviceState.error" maxLines="2">
            {{ deviceState.error }}
       </TextView>
@@ -85,19 +91,22 @@
 import Vue from "nativescript-vue";
 import { BtDevice } from "../shared/ble/BtDevice";
 import { DeviceState } from "../shared/DeviceState";
-import { ScrollView } from '@nativescript/core';
+import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
+//import { ScrollView } from '@nativescript/core';
 
 export default {
   props: {
 	  currentDevice: BtDevice,
     deviceState: DeviceState,
+    logger: OsObservableLogger
   },
   data: {
     debug: false
   },
   methods: {
 	  onReturn() {
-		  console.log("emitting close");
+      this.debug=true;
+		  this.log("emitting close");
 		  this.$emit("close", true);
 	  },
 	  connect() {
@@ -111,9 +120,21 @@ export default {
 	  read() {
       console.log("emitting read");
       this.$emit("read", this.currentDevice.UUID)
-	  }
+	  },
+    log(message: string): void {
+      console.log(message);
+//      this.logger.log(message);
+    }
   },
   computed: {
+    lightSwitch: {
+      get(): boolean {
+        return this.deviceState.lightSwitch === 1;
+      },
+      set(value: boolean) {
+        // TODO write value
+      }
+    },
 	  jsonServices() {
 		  if (this.currentDevice) {
         if (this.currentDevice.services)

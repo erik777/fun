@@ -19,6 +19,7 @@
         @connect="connect"
         @disconnect="disconnect"
         @read="read"
+        :logger="logger"
         :currentDevice="currentDevice"
         :deviceState="deviceState"/>
     </StackLayout>
@@ -101,27 +102,27 @@
         this.bt.startScanning();
       },
       onStopScanning() {
-        this.log("RS.stopScanning ");
+        this.log(" RS.stopScanning ");
         this.bt.stopScanning();
       },
     	onCurrentDevice(event: any) {
-    		this.log("onCurrentDevice event: " + JSON.stringify(event));
+    		this.log(" onCurrentDevice event: " + JSON.stringify(event));
     		this.currentDevice = event
     	},
     	clearItem() {
-    		this.log("clearItem");
+    		this.log(" RS.clearItem ");
     		this.currentDevice = null;
     	},
     	connect(uuid: string) {
-    		this.log("connecting to " + uuid);
+    		this.log(" connecting to " + uuid);
         this.currentDevice.connecting();
     		this.bt.connect(uuid)
       		.then( (perip: Peripheral) => {
-      	    this.log("Connected to " + perip.UUID);
+      	    this.log(" Connected to " + perip.UUID);
       			const device = BtNativeScriptBle.toBtDevice(perip, this.currentDevice.index);
       			this.currentDevice = device.connected();
       		}).catch( err => {
-      			this.log("Error connecting to " + uuid + ", err: " + JSON.stringify(err));
+      			this.log(" Error connecting to " + uuid + ", err: " + JSON.stringify(err));
       			 this.currentDevice.disconnected();
       		});
     	},
@@ -129,26 +130,42 @@
         this.currentDevice.reading();
     		this.bt.read(uuid, robosmart.service, robosmart.lightSwitch )
     		  .then(value => {
-            this.log("read value: " + value);
-            this.currentDevice.doneReading();
+            this.log(" read lightSwitch=" + value);
             this.deviceState.lightSwitch = value;
+
+            this.bt.read(uuid, robosmart.service, robosmart.brightness )
+            .then(value => {
+              this.log(" read brightness=" + value);
+              this.deviceState.brightness = value;
+              this.currentDevice.doneReading();
+            })
+            .catch(err => {
+              this.log("read error: " + err);
+              this.deviceState.error = err;
+              this.currentDevice.doneReadingError();
+            });
+
           })
     		  .catch(err => {
             this.log("read error: " + err);
-            this.currentDevice.doneReadingError();
             this.deviceState.error = err;
+            this.currentDevice.doneReadingError();
           });
     	},
     	disconnect(uuid: string) {
-        console.log("disconnecting " + uuid);
-        this.currentDevice.disconnecting();
-        this.bt.disconnect(uuid).then( () => {
-        	console.log("Disconnected " + uuid);
-        	this.currentDevice.disconnected();
-        }).catch( err => {
-        	console.log("Disconnecting error for " + uuid + ", err: " + JSON.stringify(err));
-          this.currentDevice.disconnected();
-        })
+        this.log(" disconnecting " + uuid);
+        if (this.currentDevice) {
+          this.currentDevice.disconnecting();
+          this.bt.disconnect(uuid).then( () => {
+            this.log(" Disconnected " + uuid);
+            this.currentDevice.disconnected();
+          }).catch( err => {
+            this.log(" Disconnecting error for " + uuid + ", err: " + JSON.stringify(err));
+            this.currentDevice.disconnected();
+          })
+        } else {
+          this.log(" disconnect error - currentDevice is null ");
+        }
     	},
       log(message: string): void {
         console.log(message);
