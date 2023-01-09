@@ -82,8 +82,12 @@
     },
     methods: {
       onStartScanning() {
-        this.log("startScanning ");
+        this.log("RS.startScanning ");
         this.bt.startScanning();
+      },
+      onStopScanning() {
+        this.log("RS.stopScanning ");
+        this.bt.stopScanning();
       },
     	onCurrentDevice(event: any) {
     		this.log("onCurrentDevice event: " + JSON.stringify(event));

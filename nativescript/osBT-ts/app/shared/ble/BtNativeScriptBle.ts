@@ -136,7 +136,7 @@ export class BtNativeScriptBle {
         // https://developer.android.com/guide/topics/connectivity/bluetooth-le
         //                  skipPermissionCheck: false,
         onDiscovered: (perip: Peripheral) => {
-            this.log(` BLE.onDisc `);
+            // this.log(` BLE.onDisc `);
             const btDevice = BtNativeScriptBle.toBtDevice(perip, index++);
             btDevice.description = "onDisc1 " + btDevice.description;
             if (!this.scanningEmmiter.send(btDevice))
@@ -144,7 +144,7 @@ export class BtNativeScriptBle {
         }
     })
     .then(() => {
-        this.log(` startScanning - complete `);
+        // this.log(` startScanning - complete `);
         this.scanningEmmiter.done();
     }, (err: any) => {
         this.log(` startScanning - err ` + err);
@@ -152,6 +152,23 @@ export class BtNativeScriptBle {
     });
 
     return this.getScanningEmmiter();
+  }
+
+  stopScanning() {
+    this.btInstance.stopScanning().then(() => {
+      this.log(` stopScanning - then`);
+      // TODO not sure this is needed or wise
+      // this.scanningEmmiter.done();
+    }).catch( err => {
+        this.log(` stopScanning - err`);
+        // TODO how can it tell a start from a stop error?
+        this.scanningEmmiter.error(err);
+        // dialogs.alert({
+        //     title: "Whoops!",
+        //     message: err,
+        //     okButtonText: "OK, so be it"
+        // });
+    });
   }
 
   static toBtDevice(perip: Peripheral, index: number): BtDevice {

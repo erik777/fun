@@ -109,7 +109,7 @@ import { Subscription } from "rxjs";
             if (!this.subScanMessage) {
                 this.subScanMessage = this.bt.getScanningEmmiter().onMessage(perip => {
                     if (perip) {
-                        this.log(`onDisco `);
+                        this.log(`LIST.onDisco `);
                         const btDevice = BtNativeScriptBle.toBtDevice(perip, this.deviceList.length);
                         btDevice.description = "onDisc1 " + btDevice.description;
                         this.deviceList.push(btDevice);
@@ -160,20 +160,22 @@ import { Subscription } from "rxjs";
             this.peripherals.length = 0;
             this.log("startScanning - calling");
             this.$emit("startScanning");
-            console.log("startScanning - called");
+            // console.log("startScanning - called");
         },
         doStopScanning() {
-            this.btInstance.stopScanning().then(() => {
-              this.log(` stopScanning - then`);
-                this.isLoading = false;
-            }).catch( err => {
-                this.log(` stopScanning - err`);
-                dialogs.alert({
-                    title: "Whoops!",
-                    message: err,
-                    okButtonText: "OK, so be it"
-                });
-            });
+            this.log("doStopScanning - calling");
+            this.$emit("stopScanning");
+            // this.btInstance.stopScanning().then(() => {
+            //   this.log(` stopScanning - then`);
+            //   this.isLoading = false;
+            // }).catch( err => {
+            //     this.log(` stopScanning - err`);
+            //     dialogs.alert({
+            //         title: "Whoops!",
+            //         message: err,
+            //         okButtonText: "OK, so be it"
+            //     });
+            // });
         },
         // currently not used
         onDiscoveredEvent(perip: Peripheral) {
