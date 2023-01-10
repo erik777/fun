@@ -127,6 +127,24 @@ export class BtNativeScriptBle {
     return promise;
   }
 
+  write(uuid: string, serviceUUID: string,
+    characteristicUUID: string, value: any): Promise<void>
+  {
+    const promise = new Promise<void>( (resolve, reject) => {
+      this.log(" write(" + uuid + "," + serviceUUID + "," +
+        characteristicUUID + "," + value + ") called ");
+      this.btInstance.write({
+        peripheralUUID: uuid,
+        serviceUUID: serviceUUID,
+        characteristicUUID: characteristicUUID,
+        value: value,
+      })
+      .then(response => resolve())
+      .catch(err => reject(err));
+    });
+    return promise;
+  }
+
   disconnect(uuid: string): Promise<any> {
     this.log("disconnect " + uuid);
     return this.btInstance.disconnect({UUID: uuid});

@@ -7,7 +7,7 @@
           <Span :text="currentDevice.description"/>
         </FormattedString>
       </Label>
-        <Label class="theDevice">
+        <Label class="theDevice" v-if="!deviceState.error">
           <FormattedString>
             <Span text="RSSI "/>
             <Span :text="currentDevice.RSSI"/>
@@ -37,7 +37,7 @@
             <Span :text="currentDevice.localName"/>
           </FormattedString>
         </Label>
-        <Label class="theDevice" v-if="!connected">
+        <Label class="theDevice" v-if="!connected && !deviceState.error">
           <FormattedString>
             <Span text="Manufacturer "/>
             <Span :text="currentDevice.manufacturerId"/>
@@ -49,7 +49,7 @@
           <Span :text="currentDevice.state"/>
         </FormattedString>
       </Label>
-      <Label class="theDevice">
+      <Label class="theDevice" v-if="!connected && !deviceState.error">
         <FormattedString>
           <Span text="Services "/>
           <Span :text="jsonServices"/>
@@ -58,7 +58,7 @@
       <Label class="theDevice" v-if="deviceState.haveLightSwitch()">
         <FormattedString>
           <Span text="Light Switch "/>
-          <Span :text="lightSwitch"/>
+          <Span :text="deviceState.lightSwitch"/>
         </FormattedString>
       </Label>
       <Label class="theDevice" v-if="deviceState.haveBrightness()">
@@ -75,7 +75,7 @@
         :value="deviceState.brightness"
         @valueChange="onBrightnessChange($event)"
         maxValue="255" />
-      <TextView class="theDevice" v-if="deviceState.error" maxLines="2">
+      <TextView class="error" v-if="deviceState.error" maxLines="2">
            {{ deviceState.error }}
       </TextView>
       <TextView class="theDevice" v-if="debug && !deviceState.error" maxLines="2">
@@ -132,10 +132,12 @@ export default {
     onBrightnessChange(event) {
       this.log(" brightness changed to " + event.value );
       if (event.value !== this.deviceState.brightness)
-        this.$emit("changeBrightness", event.value);
+        this.$emit("changeBrightness", this.currentDevice.UUID, event.value);
     },
     onLightSwitchChange(event) {
       this.log(" lightSwitch changed to " + event.value );
+      if (event.value !== this.deviceState.isLightOn())
+        this.$emit("changeLightSwitch", this.currentDevice.UUID, event.value);
     },
     log(message: string): void {
       console.log(message);
@@ -175,5 +177,8 @@ export default {
   }
   .theDevice {
     font-size: 20;
+  }
+  .error {
+    font-size: 16;
   }
 </style>

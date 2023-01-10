@@ -42,6 +42,9 @@ export const CONNECTING = "connecting";
 export const READING = "reading";
 export const READ = "done reading";
 export const READ_ERROR = "reading error";
+export const WRITING = "writing";
+export const WROTE = "done writing";
+export const WRITE_ERROR = "writing error";
 
 export class BtDevice {
   description: string;
@@ -114,6 +117,21 @@ export class BtDevice {
 
   reading(): BtDevice {
     this.state = READING;
+    return this;
+  }
+
+  doneWriting(): BtDevice {
+    this.state = WROTE;
+    return this;
+  }
+
+  doneWritingError(): BtDevice {
+    this.state = WRITE_ERROR;
+    return this;
+  }
+
+  writing(): BtDevice {
+    this.state = WRITING;
     return this;
   }
 
