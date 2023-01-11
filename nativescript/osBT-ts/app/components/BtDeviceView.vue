@@ -37,7 +37,7 @@
             <Span :text="currentDevice.localName"/>
           </FormattedString>
         </Label>
-        <Label class="theDevice" v-if="!connected && !deviceState.error">
+        <Label class="theDevice" v-if="debug && !connected && !deviceState.error">
           <FormattedString>
             <Span text="Manufacturer "/>
             <Span :text="currentDevice.manufacturerId"/>
@@ -49,7 +49,7 @@
           <Span :text="currentDevice.state"/>
         </FormattedString>
       </Label>
-      <Label class="theDevice" v-if="!connected && !deviceState.error">
+      <Label class="theDevice" v-if="debug && !connected && !deviceState.error">
         <FormattedString>
           <Span text="Services "/>
           <Span :text="jsonServices"/>

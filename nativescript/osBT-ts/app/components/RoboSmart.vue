@@ -165,7 +165,6 @@
       changeLightSwitch(uuid: string, onOrOff: boolean) {
         this.log(" RS.changeLightSwitch " + onOrOff);
         this.currentDevice.writing();
-//        const value = onOrOff ? ]1] : [0];
         const data = new Uint8Array(1);
         data[0] = onOrOff ? 0x1 : 0x0;
     		this.bt.write(uuid, robosmart.service, robosmart.lightSwitch, data )

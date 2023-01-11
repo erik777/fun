@@ -137,7 +137,10 @@ export class BtDevice {
 
   isConnected(): boolean {
     return this.state === CONNECTED || this.state === READING
-    || this.state === READ || this.state === READ_ERROR;
+    || this.state === READ || this.state === READ_ERROR
+    || this.state === WROTE || this.state === WRITE_ERROR
+    || this.state === WRITING || this.state === READING
+    ;
   }
 
   isConnecting(): boolean {
