@@ -29,6 +29,7 @@
   import { AppState } from "~/shared/AppState";
 
   const deviceList: BtDevice[] = [];
+  const devices = new Map<string, BtDevice>();
   let currentDevice: CurrentDevice = null;
   const peripherals = new ObservableArray<Peripheral>();
   const status = "";
@@ -42,6 +43,7 @@
     data() {
         return {
             deviceList: deviceList,
+            devices: devices,
             currentDevice: currentDevice,
             isLoading: false,
             peripherals: peripherals,
@@ -56,18 +58,6 @@
     },
     mounted() {
         this.logger.subscribe(msg => this.status += msg);
-        // Trace.enable();    // did nothing
-        // this.log(`mounted() called.`);
-        // this.bt.enable().then(enabled => {
-        //     setTimeout(() => {
-        //         this.btEnabled = enabled;
-        //         //            if (this.btEnabled)
-        //         //                this.checkPermissions();
-        //         //          	this.doStartScanning();
-        //         this.log("Checking permissions... ");
-        //         this.checkPermissions();
-        //     }, 500);
-        // });
         this.log("LIST.mounted ");
         this.initSubscriptions();
     },
@@ -115,6 +105,7 @@
                         const btDevice = BtNativeScriptBle.toBtDevice(perip, this.deviceList.length);
                         btDevice.description = "onDisc1 " + btDevice.description;
                         this.deviceList.push(btDevice);
+                        this.devices.set(btDevice.UUID, btDevice);
                     } else {
                         this.log(`subScanMessage ERROR: empty perip `);
                     }
@@ -125,21 +116,24 @@
             }
         },
         onRefresh() {
+            let device: BtDevice;
             if (this.btEnabled) {
                 this.doStartScanning();
-                this.deviceList.push(new BtDevice({
+                device = new BtDevice({
                     description: "scanning " + this.deviceList.length,
                     name: "scanning " + this.deviceList.length,
                     index: this.deviceList.length
-                }));
+                });
             }
             else {
-                this.deviceList.push(new BtDevice({
+                device = new BtDevice({
                     description: "blah " + this.appState.enabled + " " + this.deviceList.length,
                     name: "blah " + this.deviceList.length,
                     index: this.deviceList.length
-                }));
+                });
             }
+            this.deviceList.push(device);
+            this.devices.set(device.UUID, device);
             this.log("onRefresh " + this.deviceList.length);
         },
         onItemTap(event: any) {
@@ -158,35 +152,26 @@
             this.isLoading = true;
             // reset the array
             this.deviceList.splice(0);  // clear
+            this.devices.clear();
             this.peripherals.length = 0;
-            this.log("startScanning - calling");
+            this.log(" startScanning - calling ");
             this.$emit("startScanning");
-            // console.log("startScanning - called");
         },
         doStopScanning() {
-            this.log("doStopScanning - calling");
+            this.log(" doStopScanning - calling ");
             this.$emit("stopScanning");
-            // this.btInstance.stopScanning().then(() => {
-            //   this.log(` stopScanning - then`);
-            //   this.isLoading = false;
-            // }).catch( err => {
-            //     this.log(` stopScanning - err`);
-            //     dialogs.alert({
-            //         title: "Whoops!",
-            //         message: err,
-            //         okButtonText: "OK, so be it"
-            //     });
-            // });
         },
         // currently not used
         onDiscoveredEvent(perip: Peripheral) {
             console.log(`onDiscoveredEvent()`);
             //          const perip = eventData.data as Peripheral;
-            this.deviceList.push(new BtDevice({
+            const device = new BtDevice({
                 index: this.deviceList.length,
                 name: "onDiscEvent " + this.deviceList.length,
                 description: "onDiscEvent " + this.deviceList.length,
-            }));
+            });
+            this.deviceList.push(device);
+            this.devices.push(device.UUID, device);
             let index = -1;
             this.peripherals.some((p, i) => {
                 if (p.UUID === perip.UUID) {
@@ -197,19 +182,23 @@
             });
             console.log("Peripheral found:", JSON.stringify(perip), index);
             if (index === -1) {
-                this.deviceList.push(new BtDevice({
+                const device = new BtDevice({
                     index: this.deviceList.length,
                     name: "push " + this.deviceList.length,
                     UUID: perip.UUID
-                }));
+                });
+                this.deviceList.push(device);
+                this.devices.set(device.UUID, device);
                 this.peripherals.push(perip);
             }
             else {
-                this.deviceList.push(new BtDevice({
+                const device = new BtDevice({
                     index: index,
                     name: "setItem " + index,
                     UUID: perip.UUID
-                }));
+                });
+                this.deviceList.push(device);
+                this.devices.set(device.UUID, device);
                 this.peripherals.setItem(index, perip);
             }
         },

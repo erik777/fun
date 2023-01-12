@@ -65,7 +65,7 @@ export class BtDevice {
   {
     if (this.other) {
       this.name = this.other.name;
-      this.UUID = this.other.UUID;
+      this.UUID = this.other.UUID ? this.other.UUID : this.name;
       if (this.other.index)
         this.index = this.other.index;
       if (this.other.description)
