@@ -1,40 +1,39 @@
 <template>
     <StackLayout class="deviceList">
-      <Button class="button" :text="refreshBtnText" @tap="onRefresh" />
-      <ScrollView>
-	      <TextView class="status" editable="false" maxLines="4">
-	        {{ statusText }}
-	      </TextView>
-      </ScrollView>
+        <Button class="button" :text="refreshBtnText" @tap="onRefresh" />
+        <ScrollView>
+            <TextView class="status" editable="false" maxLines="4">
+                {{ statusText }}
+            </TextView>
+        </ScrollView>
 
-      <ListView for="item in deviceList" @itemTap="onItemTap">
-        <v-template>
-          <Label :text="item.description" />
-        </v-template>
-      </ListView>
+        <ListView for="item in deviceList" @itemTap="onItemTap">
+            <v-template>
+                <Label :text="item.description" />
+            </v-template>
+        </ListView>
     </StackLayout>
 </template>
 
 <script lang="ts">
 //   import Vue from "nativescript-vue";
 //   import * as dialogs from '@nativescript/core/ui/dialogs';
-  import { ObservableArray } from '@nativescript/core/data/observable-array';
-  import { ScrollView, Trace } from '@nativescript/core';
+// import { ObservableArray } from '@nativescript/core/data/observable-array';
+// import { Peripheral } from '@nativescript-community/ble';
+import { ScrollView, Trace } from '@nativescript/core';
 
-  import { Peripheral } from '@nativescript-community/ble';
+import { BtDevice, CurrentDevice } from "../shared/ble/BtDevice";
+import { BtNativeScriptBle } from "../shared/ble/BtNativeScriptBle";
+import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
+import { AppState } from "~/shared/AppState";
 
-  import { BtDevice, CurrentDevice } from "../shared/ble/BtDevice";
-  import { BtNativeScriptBle } from "../shared/ble/BtNativeScriptBle";
-  import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
-  import { AppState } from "~/shared/AppState";
+const deviceList: BtDevice[] = [];
+const devices = new Map<string, BtDevice>();
+let currentDevice: CurrentDevice = null;
+// const peripherals = new ObservableArray<Peripheral>();
+const status = "";
 
-  const deviceList: BtDevice[] = [];
-  const devices = new Map<string, BtDevice>();
-  let currentDevice: CurrentDevice = null;
-  const peripherals = new ObservableArray<Peripheral>();
-  const status = "";
-
-  export default {
+export default {
     props: {
         bt: BtNativeScriptBle,
         logger: OsObservableLogger,
@@ -46,7 +45,7 @@
             devices: devices,
             currentDevice: currentDevice,
             isLoading: false,
-            peripherals: peripherals,
+            // peripherals: peripherals,
             status: status,
             subScanDone: undefined,
             subScanErr: undefined,
@@ -104,7 +103,8 @@
                         this.log(`LIST.onDisco `);
                         const btDevice = BtNativeScriptBle.toBtDevice(perip, this.deviceList.length);
                         btDevice.description = "onDisc1 " + btDevice.description;
-                        this.deviceList.push(btDevice);
+                        if (!this.devices.has(btDevice.UUID))
+                            this.deviceList.push(btDevice);
                         this.devices.set(btDevice.UUID, btDevice);
                     } else {
                         this.log(`subScanMessage ERROR: empty perip `);
@@ -132,7 +132,8 @@
                     index: this.deviceList.length
                 });
             }
-            this.deviceList.push(device);
+            if (!this.devices.has(device.UUID))
+                this.deviceList.push(device);
             this.devices.set(device.UUID, device);
             this.log("onRefresh " + this.deviceList.length);
         },
@@ -153,7 +154,7 @@
             // reset the array
             this.deviceList.splice(0);  // clear
             this.devices.clear();
-            this.peripherals.length = 0;
+            // this.peripherals.length = 0;
             this.log(" startScanning - calling ");
             this.$emit("startScanning");
         },
@@ -161,65 +162,24 @@
             this.log(" doStopScanning - calling ");
             this.$emit("stopScanning");
         },
-        // // currently not used
-        // onDiscoveredEvent(perip: Peripheral) {
-        //     console.log(`onDiscoveredEvent()`);
-        //     //          const perip = eventData.data as Peripheral;
-        //     const device = new BtDevice({
-        //         index: this.deviceList.length,
-        //         name: "onDiscEvent " + this.deviceList.length,
-        //         description: "onDiscEvent " + this.deviceList.length,
-        //     });
-        //     this.deviceList.push(device);
-        //     this.devices.push(device.UUID, device);
-        //     let index = -1;
-        //     this.peripherals.some((p, i) => {
-        //         if (p.UUID === perip.UUID) {
-        //             index = i;
-        //             return true;
-        //         }
-        //         return false;
-        //     });
-        //     console.log("Peripheral found:", JSON.stringify(perip), index);
-        //     if (index === -1) {
-        //         const device = new BtDevice({
-        //             index: this.deviceList.length,
-        //             name: "push " + this.deviceList.length,
-        //             UUID: perip.UUID
-        //         });
-        //         this.deviceList.push(device);
-        //         this.devices.set(device.UUID, device);
-        //         this.peripherals.push(perip);
-        //     }
-        //     else {
-        //         const device = new BtDevice({
-        //             index: index,
-        //             name: "setItem " + index,
-        //             UUID: perip.UUID
-        //         });
-        //         this.deviceList.push(device);
-        //         this.devices.set(device.UUID, device);
-        //         this.peripherals.setItem(index, perip);
-        //     }
-        // },
         log(message: string): void {
-          console.log(message);
-          this.logger.log(message);
+            console.log(message);
+            this.logger.log(message);
         }
     }
 };
 </script>
 
 <style scoped lang="scss">
-  @import '@nativescript/theme/scss/variables/blue';
+@import '@nativescript/theme/scss/variables/blue';
 
-  // Custom styles
-  .deviceList {
+// Custom styles
+.deviceList {
     margin-bottom: 100px
-  }
+}
 
-  .status {
+.status {
     margin-top: 10px;
     font-size: large;
-  }
+}
 </style>
