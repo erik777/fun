@@ -49,8 +49,6 @@
   const btNSBLE = new BtNativeScriptBle(btInstance, logger);
   const deviceState = new DeviceState();
 
-  // TODO needs for currentDevice to be a singleton
-
   export default {
 	  data() {
 		  return {
@@ -78,26 +76,6 @@
           }, 500);
       });
       this.log("RS.mounted ");
-
-//		  console.log(`mounted() called.`);
-//      this.btInstance.enable().then(enabled => {
-//        setTimeout(() => {
-//        	this.btEnabled = enabled;
-//          dialogs.alert({
-//              title: 'Did the user allow enabling Bluetooth by our app?',
-//              message: enabled ? 'Yes' : 'No',
-//              okButtonText: 'OK, nice!'
-//          });
-//        }, 500);
-//      });
-        // this.btInstance.on(Bluetooth.bluetooth_status_event, (eventData: any) => {
-        //     console.log("bluetooth_status_event fired: " + JSON.stringify(eventData));
-        // });
-        // // using an event listener instead of the 'onDiscovered' callback of 'startScanning'
-        // this.btInstance.on(Bluetooth.device_discovered_event, (eventData: any) => {
-        //     //      const perip = eventData.data as Peripheral;
-        //     //          this.onDiscoveredEvent(perip);
-        // });
 	  },
     computed: {
       message() {

@@ -30,7 +30,6 @@ import { AppState } from "~/shared/AppState";
 const deviceList: BtDevice[] = [];
 const devices = new Map<string, BtDevice>();
 let currentDevice: CurrentDevice = null;
-// const peripherals = new ObservableArray<Peripheral>();
 const status = "";
 
 export default {
@@ -45,7 +44,6 @@ export default {
             devices: devices,
             currentDevice: currentDevice,
             isLoading: false,
-            // peripherals: peripherals,
             status: status,
             subScanDone: undefined,
             subScanErr: undefined,
@@ -145,16 +143,15 @@ export default {
             this.currentDevice = event.item;
             this.$emit("currentDevice", this.currentDevice);
         },
-        checkPermissions() {
-            this.bt.checkPermissions();
-        },
+        // checkPermissions() {
+        //     this.bt.checkPermissions();
+        // },
         // this one uses automatic permission handling
         doStartScanning() {
             this.isLoading = true;
             // reset the array
             this.deviceList.splice(0);  // clear
             this.devices.clear();
-            // this.peripherals.length = 0;
             this.log(" startScanning - calling ");
             this.$emit("startScanning");
         },

@@ -94,11 +94,10 @@
 </template>
 
 <script lang="ts">
-import Vue from "nativescript-vue";
+// import Vue from "nativescript-vue";
 import { BtDevice } from "../shared/ble/BtDevice";
 import { DeviceState } from "../shared/DeviceState";
 import { OsObservableLogger } from "~/shared/util/OsObservableLogger";
-//import { ScrollView } from '@nativescript/core';
 
 export default {
   props: {
@@ -145,14 +144,6 @@ export default {
     }
   },
   computed: {
-    // lightSwitchCalc: {
-    //   get(): boolean {
-    //     return this.deviceState.lightSwitch === 1;
-    //   },
-    //   set(value: boolean) {
-    //     // TODO write value
-    //   }
-    // },
 	  jsonServices() {
 		  if (this.currentDevice) {
         if (this.currentDevice.services)
